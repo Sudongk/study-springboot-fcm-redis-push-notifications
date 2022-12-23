@@ -1,0 +1,24 @@
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 3
+        format_sql: true
+        highlight_sql: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/boardapi_db?characterEncoding=UTF-8&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: rlatnehd@123
+
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
