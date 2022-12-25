@@ -1,10 +1,10 @@
 ## BOARD API 서버 (study)
 
 ### 사용 기술
-JAVA 8
-Spring Boot
-MySQL
-Query Dsl
+JAVA 8<br>
+Spring Boot<br>
+MySQL<br>
+Query Dsl<br>
 
 ### 개요
 스터디용 게시판 API 서버 개발<br>
