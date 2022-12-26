@@ -34,6 +34,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = getJwtToken(request);
+
+        log.info("jwtFilter doFilterInternal : {}", jwtToken);
+
         Map<String, Object> claims = jwtTokenProvider.parseClaims(jwtToken);
 
         SecurityContextHolder.getContext().setAuthentication(createAuthentication(claims));
@@ -42,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getRequestURI().startsWith("/api/v1/login");
+        return request.getRequestURI().startsWith("/api/v1/login");
     }
 
     private String getJwtToken(HttpServletRequest servletRequest) {
@@ -53,6 +56,8 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private Authentication createAuthentication(Map<String, Object> claims) {
+        Object roles1 = claims.get("roles");
+
         List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

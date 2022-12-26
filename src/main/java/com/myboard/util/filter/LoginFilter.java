@@ -52,6 +52,8 @@ public class LoginFilter extends OncePerRequestFilter {
     private String generateToken(Authentication authentication) {
         User user = (User)authentication.getPrincipal();
 
+        log.info("generateToken : {}", user.toString());
+
         String stringRole = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -63,7 +65,6 @@ public class LoginFilter extends OncePerRequestFilter {
     private static Map<String, Object> map_of(String key, Object stringRole) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(key, stringRole);
-        log.info(claims.get(key).toString());
         return claims;
     }
 
