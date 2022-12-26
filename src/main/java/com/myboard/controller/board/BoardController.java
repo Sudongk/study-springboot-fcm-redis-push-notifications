@@ -30,7 +30,7 @@ public class BoardController {
     /**
      * 보드 리스트
      */
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/board")
     public ResponseEntity<List<BoardResponseDto>> boardList() {
         return ResponseEntity.status(HttpStatus.OK)

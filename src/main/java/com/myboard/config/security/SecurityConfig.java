@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .roles("ADMIN")
                         .build()
         );
-
+        
         return inMemoryUser;
     }
 
