@@ -14,7 +14,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
         name = "article",
-        indexes = @Index(name = "created_idx", columnList = "created_at")
+        indexes = {
+                    @Index(name = "created_idx", columnList = "created_at"),
+                    @Index(name = "title_idx", columnList = "title")
+        }
 )
 public class Article extends BaseColumn {
 
