@@ -13,6 +13,12 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "user",
+        indexes = {
+                    @Index(name = "username_idx", columnList = "username")
+        }
+)
 public class User extends BaseColumn {
 
     @Column(name = "username", length = 20, nullable = false, unique = true)
@@ -21,7 +27,7 @@ public class User extends BaseColumn {
     @Column(name = "password", length = 300, nullable = false)
     private String password;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
