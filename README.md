@@ -4,6 +4,7 @@
 JAVA 8<br>
 Spring Boot<br>
 MySQL<br>
+JPA<br>
 Query Dsl<br>
 
 ### 개요
