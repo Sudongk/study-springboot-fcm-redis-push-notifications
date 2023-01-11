@@ -5,7 +5,7 @@ JAVA 8<br>
 Spring Boot<br>
 MySQL<br>
 JPA<br>
-Query Dsl<br>
+Querydsl<br>
 
 ### 개요
 스터디용 게시판 API 서버 개발<br>
