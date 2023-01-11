@@ -21,9 +21,9 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/search")
-    public ResponseEntity<SearchResponseDto<?>> search(@SearchParams SearchParameter searchParameter) {
+    public ResponseEntity<SearchResponseDto> search(@SearchParams SearchParameter searchParameter) {
 
-        SearchResponseDto<?> search = searchService.search(searchParameter);
+        SearchResponseDto search = searchService.search(searchParameter);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(search);

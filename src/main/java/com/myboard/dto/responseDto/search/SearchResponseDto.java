@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class SearchResponseDto<T> {
+public class SearchResponseDto {
 
-    T result;
+    Object result;
 
 }

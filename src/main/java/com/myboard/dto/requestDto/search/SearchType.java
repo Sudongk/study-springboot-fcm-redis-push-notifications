@@ -2,10 +2,12 @@ package com.myboard.dto.requestDto.search;
 
 import com.myboard.exception.search.InvalidSearchTypeException;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+@Slf4j
 @Getter
 public enum SearchType {
 
@@ -20,11 +22,11 @@ public enum SearchType {
 
     public static SearchType of(String value) {
         if (Objects.isNull(value)) {
-            return ARTICLE;
+            return BOARD;
         }
 
         return Arrays.stream(values())
-                .filter(searchType -> searchType.value.equalsIgnoreCase(value))
+                .filter(searchType -> searchType.value.equals(value))
                 .findFirst()
                 .orElseThrow(InvalidSearchTypeException::new);
     }

@@ -20,14 +20,14 @@ public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
 
     @Override
-    public SearchResponseDto<?> search(SearchParameter searchParameter) {
+    public SearchResponseDto search(SearchParameter searchParameter) {
 
         String type = searchParameter.getSearchType().getValue();
         String articleType = SearchType.ARTICLE.getValue();
         String boardType = SearchType.BOARD.getValue();
         PageRequest pageRequest = searchParameter.ofPageRequest();
 
-        SearchResponseDto<Object> result = new SearchResponseDto<>();
+        SearchResponseDto result = new SearchResponseDto();
 
         if (type.equals(articleType)) {
             Page<ArticleResponseDto> searchResult = searchRepository.searchArticle(searchParameter, pageRequest);

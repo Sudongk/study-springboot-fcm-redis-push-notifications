@@ -5,5 +5,7 @@ import com.myboard.dto.responseDto.search.SearchResponseDto;
 
 
 public interface SearchService {
-    SearchResponseDto<?> search(SearchParameter searchParameter);
+
+    SearchResponseDto search(SearchParameter searchParameter);
+
 }
