@@ -55,7 +55,7 @@ public enum ErrorType {
     C003("C003", "존재하지 않는 댓글입니다.", CommentNotFoundException.class),
 
     S001("S001", "페이지의 시작 값은 음수가 될 수 없습니다.", InvalidPageStartException.class),
-    S002("S002", "유효하지 않은 페이지 크기입니다. 유효한 크기 : 1 ~ 100", InvalidPageSizeException.class),
+    S002("S002", "유효하지 않은 페이지 크기입니다. 유효한 크기 : 20 ~ 50", InvalidPageSizeException.class),
     S003("S003", "유효하지 않은 검색 타입입니다. board, article", InvalidSearchTypeException.class),
     S004("S004", "검색어는 공백일 수 없습니다.", SearchKeywordNullException.class),
     S005("S005", "검색어는 30자 이하여야 합니다.", LongSearchKeywordException.class),

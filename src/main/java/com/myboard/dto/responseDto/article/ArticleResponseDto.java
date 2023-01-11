@@ -1,6 +1,7 @@
 package com.myboard.dto.responseDto.article;
 
 import com.myboard.dto.responseDto.articleComment.ArticleCommentResponseDto;
+import com.myboard.entity.Article;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,6 @@ public class ArticleResponseDto {
     private LocalDateTime createdDateTime;
     private Long totalArticleComment;
     List<ArticleCommentResponseDto> articleComments = new ArrayList<>();
-
 
     // board 상세 조회용
     @Builder
