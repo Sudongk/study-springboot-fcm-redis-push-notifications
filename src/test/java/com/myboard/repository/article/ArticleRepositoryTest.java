@@ -2,8 +2,6 @@ package com.myboard.repository.article;
 
 import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.dto.responseDto.articleComment.ArticleCommentResponseDto;
-import com.myboard.repository.article.ArticleRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +42,5 @@ class ArticleRepositoryTest {
             System.out.println("empty");
         }
     }
-
 
 }
