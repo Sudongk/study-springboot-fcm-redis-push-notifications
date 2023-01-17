@@ -1,5 +1,7 @@
 package com.myboard.util.filter;
 
+import com.myboard.exception.user.UserNotFoundException;
+import com.myboard.repository.user.UserRepository;
 import com.myboard.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class LoginFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,6 +43,11 @@ public class LoginFilter extends OncePerRequestFilter {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         response.setHeader(HttpHeaders.AUTHORIZATION, generateToken(authentication));
+
+        Long userId = userRepository.findIdByUsername(String.valueOf(username))
+                .orElseThrow(UserNotFoundException::new);
+
+        httpSession.setAttribute("USER_ID", userId);
     }
 
     @Override

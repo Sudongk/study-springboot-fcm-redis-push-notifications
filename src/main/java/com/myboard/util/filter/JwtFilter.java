@@ -56,8 +56,6 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private Authentication createAuthentication(Map<String, Object> claims) {
-        Object roles1 = claims.get("roles");
-
         List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

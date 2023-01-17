@@ -48,6 +48,8 @@ dependencies {
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
 
 tasks.named('test') {

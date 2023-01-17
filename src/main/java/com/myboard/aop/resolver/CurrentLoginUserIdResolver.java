@@ -1,26 +1,24 @@
 package com.myboard.aop.resolver;
 
-import com.myboard.exception.user.UserNotFoundException;
-import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Collection;
+import javax.servlet.http.HttpSession;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CurrentLoginUserIdResolver implements HandlerMethodArgumentResolver {
 
-    private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -30,12 +28,10 @@ public class CurrentLoginUserIdResolver implements HandlerMethodArgumentResolver
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Object username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        log.info("username : {} , authorities : {}", username, authorities);
+        Optional<Long> userId = Optional.ofNullable(httpSession.getAttribute("USER_ID"))
+                .map(id -> (Long) id);
 
-        return userRepository.findIdByUsername(String.valueOf(username))
-                .orElseThrow(UserNotFoundException::new);
+        return userId.orElseThrow(NoSuchElementException::new);
     }
 
 }

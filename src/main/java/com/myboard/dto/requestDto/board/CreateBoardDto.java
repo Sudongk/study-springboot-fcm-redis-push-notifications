@@ -1,11 +1,11 @@
 package com.myboard.dto.requestDto.board;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,4 +19,9 @@ public class CreateBoardDto {
 
     List<String> tagNames = new ArrayList<>();
 
+    @Builder
+    public CreateBoardDto(String boardName, List<String> tagNames) {
+        this.boardName = boardName;
+        this.tagNames = tagNames;
+    }
 }
