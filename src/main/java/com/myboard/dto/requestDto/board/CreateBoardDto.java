@@ -1,6 +1,7 @@
 package com.myboard.dto.requestDto.board;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode(of = "boardName")
 @NoArgsConstructor
 public class CreateBoardDto {
 
