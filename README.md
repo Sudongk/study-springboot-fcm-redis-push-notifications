@@ -6,6 +6,8 @@ Spring Boot<br>
 MySQL<br>
 JPA<br>
 Querydsl<br>
+JUnit5<br>
+Mocktito
 
 ### 개요
 스터디용 게시판 API 서버 개발<br>
