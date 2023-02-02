@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,8 +25,8 @@ public class Tag {
     private String name;
 
     private Tag(String tagName) {
-        validateNotNull(tagName);
-        validateNotBlank(tagName);
+        validateNull(tagName);
+        validateBlank(tagName);
         validateLength(tagName);
         this.name = tagName;
     }
@@ -35,18 +36,23 @@ public class Tag {
     }
 
     public static List<Tag> convertListToTags(List<String> tagNames) {
+        // validateList
+        if (CollectionUtils.isEmpty(tagNames)) {
+            throw new TagNameNullException();
+        }
+
         return tagNames.stream()
                 .map(Tag::of)
                 .collect(Collectors.toList());
     }
 
-    private void validateNotBlank(String value) {
+    private void validateBlank(String value) {
         if (value.isEmpty()) {
             throw new TagNameNullException();
         }
     }
 
-    private void validateNotNull(String value) {
+    private void validateNull(String value) {
         if (Objects.isNull(value)) {
             throw new TagNameNullException();
         }

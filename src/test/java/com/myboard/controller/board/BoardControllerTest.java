@@ -5,9 +5,7 @@ import com.myboard.aop.resolver.CurrentLoginUserIdResolver;
 import com.myboard.dto.requestDto.board.CreateBoardDto;
 import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.exception.GlobalControllerAdvice;
-import com.myboard.exception.board.BoardNameBlankException;
 import com.myboard.service.board.BoardService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -180,7 +178,6 @@ public class BoardControllerTest {
         //then
         resultActions
                 .andExpect(status().is4xxClientError());
-
         then(boardService).should(never()).createBoard(request, USER_ID);
 
     }
