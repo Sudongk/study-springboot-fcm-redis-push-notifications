@@ -236,4 +236,28 @@ public class BoardControllerTest {
         then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 생성시 게시판 태그가 1개 이상 설정 안했을시 예외 발생")
+    void whenTagNameIsNull_MustThrowException() throws Exception {
+        // given
+        CreateBoardDto request = CreateBoardDto.builder()
+                .boardName("test")
+                .build();
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/v1/board/create")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(request))
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        then(boardService).should(never()).createBoard(request, USER_ID);
+    }
 }
