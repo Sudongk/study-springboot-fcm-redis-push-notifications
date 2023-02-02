@@ -260,6 +260,4 @@ public class BoardControllerTest {
 
         then(boardService).should(never()).createBoard(request, USER_ID);
     }
-
-
 }
