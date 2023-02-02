@@ -36,11 +36,6 @@ public class Tag {
     }
 
     public static List<Tag> convertListToTags(List<String> tagNames) {
-        // validateList
-        if (CollectionUtils.isEmpty(tagNames)) {
-            throw new TagNameNullException();
-        }
-
         return tagNames.stream()
                 .map(Tag::of)
                 .collect(Collectors.toList());

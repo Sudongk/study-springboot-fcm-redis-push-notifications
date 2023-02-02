@@ -1,5 +1,6 @@
 package com.myboard.dto.requestDto.board;
 
+import com.myboard.aop.valid.NotEmptyList;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class CreateBoardDto {
     @Length(min = 1, max = 30, message = "B001")
     private String boardName;
 
+    @NotEmptyList(message = "B004")
     List<String> tagNames = new ArrayList<>();
 
     @Builder
