@@ -1,5 +1,6 @@
 package com.myboard.aop.resolver;
 
+import com.myboard.exception.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -10,7 +11,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpSession;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -31,7 +31,7 @@ public class CurrentLoginUserIdResolver implements HandlerMethodArgumentResolver
         Optional<Long> userId = Optional.ofNullable(httpSession.getAttribute("USER_ID"))
                 .map(id -> (Long) id);
 
-        return userId.orElseThrow(NoSuchElementException::new);
+        return userId.orElseThrow(UserNotFoundException::new);
     }
 
 }
