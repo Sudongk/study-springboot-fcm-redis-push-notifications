@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+
 
 @Slf4j
 @Service
@@ -46,16 +45,16 @@ public class BoardServiceImpl implements BoardService {
         return savedBoard.getId();
     }
 
-    // tag 업데이트는 나중에
     @Override
     @Transactional
     public Long updateBoard(UpdateBoardDto updateBoardDto, Long boardId, Long userId) {
-        isBoardOwnedByUser(boardId, userId);
         Board board = findBoardForUpdate(boardId);
+        isBoardOwnedByUser(boardId, userId);
 
         List<Tag> oldTags = board.getTags();
         List<Tag> newTags = Tag.convertListToTags(updateBoardDto.getTagNames());
 
+        // 변경된 태그가 있을시 update
         if (!newTags.containsAll(oldTags)) {
             board.clearAndAddNewTags(newTags);
         }

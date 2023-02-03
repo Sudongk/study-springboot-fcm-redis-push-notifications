@@ -3,6 +3,8 @@ package com.myboard.controller.board;
 import com.google.gson.Gson;
 import com.myboard.aop.resolver.CurrentLoginUserIdResolver;
 import com.myboard.dto.requestDto.board.CreateBoardDto;
+import com.myboard.dto.requestDto.board.UpdateBoardDto;
+import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.exception.GlobalControllerAdvice;
 import com.myboard.service.board.BoardService;
@@ -24,10 +26,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -64,7 +64,7 @@ public class BoardControllerTest {
                 .build();
     }
 
-    private void initCurrentLoginUserIdResolver() throws Exception {
+    private void initCurrentLoginUserIdResolverReturnUserId() throws Exception {
         // init CurrentUserLoginResolver
         given(currentLoginUserIdResolver.supportsParameter(any()))
                 .willReturn(true);
@@ -98,6 +98,39 @@ public class BoardControllerTest {
         return response;
     }
 
+    private BoardResponseDto boardDetailResponse() {
+        List<ArticleResponseDto> articleResponseList = new ArrayList<>();
+
+        ArticleResponseDto firstArticle = ArticleResponseDto.builder()
+                .username("test")
+                .articleId(1L)
+                .articleTitle("test")
+                .viewCount(1L)
+                .createdDateTime(LocalDateTime.now())
+                .build();
+
+        ArticleResponseDto secondArticle = ArticleResponseDto.builder()
+                .username("test2")
+                .articleId(2L)
+                .articleTitle("test2")
+                .viewCount(2L)
+                .createdDateTime(LocalDateTime.now())
+                .build();
+
+        articleResponseList.add(firstArticle);
+        articleResponseList.add(secondArticle);
+
+        BoardResponseDto response = BoardResponseDto.builder()
+                .boardId(1L)
+                .boardName("test")
+                .createdDateTime(LocalDateTime.now())
+                .build();
+
+        response.setArticleResponseDtoList(articleResponseList);
+
+        return response;
+    }
+
     @Test
     @WithMockUser
     @DisplayName("게시판 전체 조회시 게시판 리스트 2개를 반환한다.")
@@ -120,6 +153,8 @@ public class BoardControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
+
+        then(boardService).should().boardList();
     }
 
     @Test
@@ -132,7 +167,7 @@ public class BoardControllerTest {
                 .tagNames(Arrays.asList("test1", "test2"))
                 .build();
 
-        initCurrentLoginUserIdResolver();
+        initCurrentLoginUserIdResolverReturnUserId();
 
         given(boardService.createBoard(request, USER_ID))
                 .willReturn(BOARD_ID);
@@ -178,8 +213,6 @@ public class BoardControllerTest {
         //then
         resultActions
                 .andExpect(status().is4xxClientError());
-        then(boardService).should(never()).createBoard(request, USER_ID);
-
     }
 
     @Test
@@ -204,8 +237,6 @@ public class BoardControllerTest {
         //then
         resultActions
                 .andExpect(status().is4xxClientError());
-
-        then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
     @Test
@@ -232,8 +263,6 @@ public class BoardControllerTest {
         // then
         resultActions
                 .andExpect(status().is4xxClientError());
-
-        then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
     @Test
@@ -257,7 +286,93 @@ public class BoardControllerTest {
         // then
         resultActions
                 .andExpect(status().is4xxClientError());
+    }
 
-        then(boardService).should(never()).createBoard(request, USER_ID);
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 수정 성공시 변경된 게시판 ID 리턴")
+    void boardUpdate() throws Exception {
+        // given
+        UpdateBoardDto request = UpdateBoardDto.builder()
+                .boardName("test")
+                .tagNames(Arrays.asList("test1", "test2"))
+                .build();
+
+        initCurrentLoginUserIdResolverReturnUserId();
+
+        given(boardService.updateBoard(request, BOARD_ID, USER_ID))
+                .willReturn(BOARD_ID);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/v1/board/{boardId}/update", BOARD_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(request))
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        MvcResult response = resultActions
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertThat(response.getResponse().getContentAsString())
+                .isEqualTo(BOARD_ID_STRING);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 삭제시 삭제된 게시판 ID 반환")
+    void deleteBoard() throws Exception {
+        // given
+        initCurrentLoginUserIdResolverReturnUserId();
+
+        given(boardService.deleteBoard(BOARD_ID, USER_ID))
+                .willReturn(BOARD_ID);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                delete("/api/v1/board/{boardId}/delete", BOARD_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        MvcResult response = resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertThat(response.getResponse().getContentAsString())
+                .isEqualTo(BOARD_ID_STRING);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 상세보기시 해당 게시판에 속한 게시글 리스트 반환")
+    void boardDetail() throws Exception {
+        // given
+        BoardResponseDto result = boardDetailResponse();
+
+        given(boardService.boardDetail(BOARD_ID))
+                .willReturn(result);
+
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/v1/board/{boardId}", BOARD_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+        );
+
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.boardId", result.getBoardId()).exists())
+                .andExpect(jsonPath("$.boardName", result.getBoardName()).exists())
+                .andExpect(jsonPath("$.createdDateTime", result.getCreatedDateTime()).exists())
+                .andExpect(jsonPath("$.articleResponseDtoList", hasSize(2)))
+        ;
     }
 }

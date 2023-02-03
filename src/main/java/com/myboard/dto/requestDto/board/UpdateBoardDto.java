@@ -1,15 +1,18 @@
 package com.myboard.dto.requestDto.board;
 
+import com.myboard.aop.valid.NotEmptyList;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode(of = "boardName")
 @NoArgsConstructor
 public class UpdateBoardDto {
 
@@ -17,6 +20,12 @@ public class UpdateBoardDto {
     @Length(min = 1, max = 30, message = "B001")
     private String boardName;
 
+    @NotEmptyList(message = "B004")
     List<String> tagNames = new ArrayList<>();
 
+    @Builder
+    public UpdateBoardDto(String boardName, List<String> tagNames) {
+        this.boardName = boardName;
+        this.tagNames = tagNames;
+    }
 }

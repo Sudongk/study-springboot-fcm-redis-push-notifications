@@ -65,7 +65,7 @@ public class BoardController {
      */
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/board/{boardId}/delete")
-    public ResponseEntity<?> deleteBoard(@CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
+    public ResponseEntity<Long> deleteBoard(@CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
                                          @CurrentLoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.deleteBoard(boardId, userId));
