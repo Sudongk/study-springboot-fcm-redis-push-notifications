@@ -40,7 +40,9 @@ public class Board extends BaseColumn {
     }
 
     private void addBoardToUser(User user) {
-        user.getBoardList().add(this);
+        if (user != null) {
+            user.getBoardList().add(this);
+        }
     }
 
     public void updateBoardName(String newBoardName) {

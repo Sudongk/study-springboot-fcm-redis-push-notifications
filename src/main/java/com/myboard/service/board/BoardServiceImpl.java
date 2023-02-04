@@ -32,6 +32,7 @@ public class BoardServiceImpl implements BoardService {
     // getReference 메서드를 통해 실행된 쿼리 수와 영속성 컨텍스트의 메모리 공간이 줄어들어 애플리케이션의 성능 향상
     public Long createBoard(CreateBoardDto createBoardDto, Long userId) {
         User userRef = userRepository.getReferenceById(userId);
+
         List<Tag> tags = Tag.convertListToTags(createBoardDto.getTagNames());
 
         Board board = Board.builder()
