@@ -213,6 +213,8 @@ public class BoardControllerTest {
         //then
         resultActions
                 .andExpect(status().is4xxClientError());
+
+        then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
     @Test
@@ -237,6 +239,8 @@ public class BoardControllerTest {
         //then
         resultActions
                 .andExpect(status().is4xxClientError());
+
+        then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
     @Test
@@ -263,6 +267,8 @@ public class BoardControllerTest {
         // then
         resultActions
                 .andExpect(status().is4xxClientError());
+
+        then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
     @Test
@@ -286,6 +292,8 @@ public class BoardControllerTest {
         // then
         resultActions
                 .andExpect(status().is4xxClientError());
+
+        then(boardService).should(never()).createBoard(request, USER_ID);
     }
 
     @Test
