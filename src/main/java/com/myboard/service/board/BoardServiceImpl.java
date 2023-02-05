@@ -8,6 +8,7 @@ import com.myboard.entity.Tag;
 import com.myboard.entity.User;
 import com.myboard.exception.board.BoardNotFoundException;
 import com.myboard.exception.user.NotAuthorException;
+import com.myboard.exception.user.UserNotFoundException;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -31,7 +33,7 @@ public class BoardServiceImpl implements BoardService {
     // 엔티티 겍체 자체가 아니라 엔티티에 대한 참조만 필요한 경우 getReference 메서드 아니면 항상 find 메서드를 사용 권장
     // getReference 메서드를 통해 실행된 쿼리 수와 영속성 컨텍스트의 메모리 공간이 줄어들어 애플리케이션의 성능 향상
     public Long createBoard(CreateBoardDto createBoardDto, Long userId) {
-        User userRef = userRepository.getReferenceById(userId);
+        User userRef = getUserRef(userId);
 
         List<Tag> tags = Tag.convertListToTags(createBoardDto.getTagNames());
 
@@ -49,14 +51,18 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long updateBoard(UpdateBoardDto updateBoardDto, Long boardId, Long userId) {
-        Board board = findBoardForUpdate(boardId);
-        isBoardOwnedByUser(boardId, userId);
+        Board board = isBoardOwnedByUser(boardId, userId);
 
         List<Tag> oldTags = board.getTags();
         List<Tag> newTags = Tag.convertListToTags(updateBoardDto.getTagNames());
 
-        // 변경된 태그가 있을시 update
-        if (!newTags.containsAll(oldTags)) {
+        // 이전 태그가 없을시 새로운 태그 update
+        if (oldTags.isEmpty()) {
+            board.addTags(newTags);
+        }
+
+        // 변경된 태그가 있을시 update 또는 기존 태그에서 몇개의 태그를 삭제할시 update
+        if (!oldTags.containsAll(newTags) || oldTags.size() != newTags.size()) {
             board.clearAndAddNewTags(newTags);
         }
 
@@ -70,9 +76,9 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long deleteBoard(Long boardId, Long userId) {
-        isBoardOwnedByUser(boardId, userId);
+        Board board = isBoardOwnedByUser(boardId, userId);
         boardRepository.deleteById(boardId);
-        return boardId;
+        return board.getId();
     }
 
     @Override
@@ -87,13 +93,13 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.boardDetail(boardId);
     }
 
-    private Board findBoardForUpdate(Long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(BoardNotFoundException::new);
+    private User getUserRef(Long userId) {
+        return Optional.of(userRepository.getReferenceById(userId))
+                .orElseThrow(UserNotFoundException::new);
     }
 
-    private void isBoardOwnedByUser(Long boardId, Long userId) {
-        boardRepository.findIdByUserIdAndBoardId(boardId, userId)
+    private Board isBoardOwnedByUser(Long boardId, Long userId) {
+        return boardRepository.findIdByUserIdAndBoardId(boardId, userId)
                 .orElseThrow(NotAuthorException::new);
     }
 

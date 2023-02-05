@@ -54,7 +54,7 @@ public class BoardController {
     @PreAuthorize("hasRole('USER')")
     @PutMapping("/board/{boardId}/update")
     public ResponseEntity<Long> updateBoard(@Valid @RequestBody UpdateBoardDto updateBoardDto,
-                                            @PathVariable("boardId") Long boardId,
+                                            @CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
                                             @CurrentLoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.updateBoard(updateBoardDto, boardId, userId));
@@ -66,7 +66,7 @@ public class BoardController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/board/{boardId}/delete")
     public ResponseEntity<Long> deleteBoard(@CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
-                                         @CurrentLoginUserId Long userId) {
+                                            @CurrentLoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.deleteBoard(boardId, userId));
     }

@@ -48,6 +48,7 @@ public class LoginFilter extends OncePerRequestFilter {
                 .orElseThrow(UserNotFoundException::new);
 
         httpSession.setAttribute("USER_ID", userId);
+        httpSession.setMaxInactiveInterval(600);
     }
 
     @Override

@@ -19,7 +19,6 @@ public class NotEmptyValidator implements ConstraintValidator<NotEmptyList, List
 
     @Override
     public boolean isValid(List<String> values, ConstraintValidatorContext context) {
-        log.info("NotEmptyValidator");
         return !CollectionUtils.isEmpty(values);
     }
 }

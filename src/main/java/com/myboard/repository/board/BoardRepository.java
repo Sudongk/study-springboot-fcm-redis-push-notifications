@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryEx {
 
-    @Query("SELECT b.id FROM Board b WHERE b.id = :boardId AND b.user.id = :userId")
-    Optional<Long> findIdByUserIdAndBoardId(@Param("boardId") Long boardId, @Param("userId") Long userId);
+    @Query("SELECT b FROM Board b WHERE b.id = :boardId AND b.user.id = :userId")
+    Optional<Board> findIdByUserIdAndBoardId(@Param("boardId") Long boardId, @Param("userId") Long userId);
 
 }
