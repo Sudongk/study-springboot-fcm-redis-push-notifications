@@ -7,6 +7,7 @@ import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.entity.Board;
 import com.myboard.entity.Tag;
 import com.myboard.entity.User;
+import com.myboard.exception.user.NotAuthorException;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
 import com.myboard.service.board.BoardServiceImpl;
@@ -161,7 +162,11 @@ public class BoardServiceTest {
         boardService.createBoard(request, USER_ID);
 
         // then
-        then(boardRepository).should(times(1)).save(any());
+        then(userRepository).should(times(1))
+                .getReferenceById(any());
+
+        then(boardRepository).should(times(1))
+                .save(any());
     }
 
     @Test
@@ -182,27 +187,91 @@ public class BoardServiceTest {
         then(userRepository).should(times(1))
                 .getReferenceById(USER_ID);
 
-        then(boardRepository).should(never()).save(board);
+        then(boardRepository).should(never())
+                .save(board);
     }
 
     @Test
     @WithMockUser
     @DisplayName("게시판 수정 성공")
     void updateBoardSuccessful() throws Exception {
+        // given
         UpdateBoardDto request = getUpdateBoardDto();
 
-//        given(boardRepository.findById(BOARD_ID))
-//                .willReturn(any());
-
-        doReturn(Optional.of(board)).when(boardRepository).findById(BOARD_ID);
-
         given(boardRepository.findIdByUserIdAndBoardId(BOARD_ID, USER_ID))
-                .willReturn(any());
+                .willReturn(Optional.of(board));
 
         // when
         boardService.updateBoard(request, BOARD_ID, USER_ID);
 
         // then
-        then(boardRepository).should(times(1)).save(any());
+        then(boardRepository).should(times(1))
+                .findIdByUserIdAndBoardId(any(), any());
+
+        then(boardRepository).should(times(1))
+                .flush();
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("로그인한 유저 소유의 게시판이 아닌 경우 업데이트 실패")
+    void whenBoardIsNotBelongUser_shouldNeverUpdate() throws Exception {
+        // given
+        UpdateBoardDto request = getUpdateBoardDto();
+
+        given(boardRepository.findIdByUserIdAndBoardId(BOARD_ID, USER_ID))
+                .willThrow(NotAuthorException.class);
+
+        // when
+        assertThatThrownBy(() -> boardService.updateBoard(request, BOARD_ID, USER_ID))
+                .isInstanceOf(NotAuthorException.class);
+
+        // then
+        then(boardRepository).should(times(1))
+                .findIdByUserIdAndBoardId(any(), any());
+
+        then(boardRepository).should(never())
+                .flush();
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 삭제 성공")
+    void deleteBoardSuccessful() throws Exception {
+        // given
+        given(boardRepository.findIdByUserIdAndBoardId(BOARD_ID, USER_ID))
+                .willReturn(Optional.of(board));
+
+        // when
+        boardService.deleteBoard(BOARD_ID, USER_ID);
+
+        // then
+        then(boardRepository).should(times(1))
+                .findIdByUserIdAndBoardId(any(), any());
+
+        then(boardRepository).should(times(1))
+                .deleteById(any());
+
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("로그인한 유저 소유의 게시판이 아닌 경우 삭제 실패")
+    void whenBoardIsNotBelongUser_shouldNeverDelete() throws Exception {
+        // given
+        given(boardRepository.findIdByUserIdAndBoardId(BOARD_ID, USER_ID))
+                .willThrow(NotAuthorException.class);
+
+        // when
+        assertThatThrownBy(() -> boardService.deleteBoard(BOARD_ID, USER_ID))
+                .isInstanceOf(NotAuthorException.class);
+
+        // then
+        then(boardRepository).should(times(1))
+                .findIdByUserIdAndBoardId(any(), any());
+
+        then(boardRepository).should(never())
+                .deleteById(any());
+
     }
 }
