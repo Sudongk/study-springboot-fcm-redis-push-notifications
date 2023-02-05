@@ -1,6 +1,7 @@
 package com.myboard.service;
 
 import com.myboard.dto.requestDto.board.CreateBoardDto;
+import com.myboard.dto.requestDto.board.UpdateBoardDto;
 import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.entity.Board;
@@ -103,6 +104,13 @@ public class BoardServiceTest {
                 .build();
     }
 
+    private UpdateBoardDto getUpdateBoardDto() {
+        return UpdateBoardDto.builder()
+                .boardName("test")
+                .tagNames(Arrays.asList("test1", "test2"))
+                .build();
+    }
+
     private BoardResponseDto boardDetailResponse() {
         List<ArticleResponseDto> articleResponseList = new ArrayList<>();
 
@@ -177,4 +185,24 @@ public class BoardServiceTest {
         then(boardRepository).should(never()).save(board);
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 수정 성공")
+    void updateBoardSuccessful() throws Exception {
+        UpdateBoardDto request = getUpdateBoardDto();
+
+//        given(boardRepository.findById(BOARD_ID))
+//                .willReturn(any());
+
+        doReturn(Optional.of(board)).when(boardRepository).findById(BOARD_ID);
+
+        given(boardRepository.findIdByUserIdAndBoardId(BOARD_ID, USER_ID))
+                .willReturn(any());
+
+        // when
+        boardService.updateBoard(request, BOARD_ID, USER_ID);
+
+        // then
+        then(boardRepository).should(times(1)).save(any());
+    }
 }
