@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.hamcrest.Matchers.hasSize;
 
 
+@DisplayName("게시판 컨트롤러 단위 테스트")
 @ExtendWith(MockitoExtension.class)
 public class BoardControllerTest {
 
