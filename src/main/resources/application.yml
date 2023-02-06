@@ -19,6 +19,9 @@ spring:
     username: root
     password: rlatnehd@123
 
-rsa:
-  private-key: classpath:certs/private.pem
-  public-key: classpath:certs/public.pem
+#rsa:
+#  private-key: classpath:certs/private.pem
+#  public-key: classpath:certs/public.pem
+
+jwt:
+  secret_key: zckcriwtzydklapagkzaxplmrzcrhhzkqsbiwxnflwqmvevghnmpyotmdjgxwrxbanqjtsukiuhvlyccwisjthyxecidxrqtdjvpaoabuvrouyhzjoijdkojwczuldnvnbmrnwpzajwyvoiejxychvnglaezkvem
