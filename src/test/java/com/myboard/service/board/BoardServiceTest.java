@@ -1,4 +1,4 @@
-package com.myboard.service;
+package com.myboard.service.board;
 
 import com.myboard.dto.requestDto.board.CreateBoardDto;
 import com.myboard.dto.requestDto.board.UpdateBoardDto;
@@ -98,20 +98,6 @@ public class BoardServiceTest {
         return response;
     }
 
-    private CreateBoardDto getCreateBoardDto() {
-        return CreateBoardDto.builder()
-                .boardName("test")
-                .tagNames(Arrays.asList("test1", "test2"))
-                .build();
-    }
-
-    private UpdateBoardDto getUpdateBoardDto() {
-        return UpdateBoardDto.builder()
-                .boardName("test")
-                .tagNames(Arrays.asList("test1", "test2"))
-                .build();
-    }
-
     private BoardResponseDto boardDetailResponse() {
         List<ArticleResponseDto> articleResponseList = new ArrayList<>();
 
@@ -145,6 +131,20 @@ public class BoardServiceTest {
         return response;
     }
 
+    private CreateBoardDto getCreateBoardDto() {
+        return CreateBoardDto.builder()
+                .boardName("test")
+                .tagNames(Arrays.asList("test1", "test2"))
+                .build();
+    }
+
+    private UpdateBoardDto getUpdateBoardDto() {
+        return UpdateBoardDto.builder()
+                .boardName("test")
+                .tagNames(Arrays.asList("test1", "test2"))
+                .build();
+    }
+
     @Test
     @WithMockUser
     @DisplayName("게시판 생성 성공")
@@ -166,7 +166,7 @@ public class BoardServiceTest {
                 .getReferenceById(any());
 
         then(boardRepository).should(times(1))
-                .save(any());
+                .save(any(Board.class));
     }
 
     @Test
@@ -273,5 +273,39 @@ public class BoardServiceTest {
         then(boardRepository).should(never())
                 .deleteById(any());
 
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시판 리스트 리턴")
+    void boardList() {
+        // given
+        List<BoardResponseDto> response = boardListResponse();
+
+        given(boardRepository.boardList())
+                .willReturn(response);
+
+        // when
+        boardService.boardList();
+
+        // then
+        then(boardRepository).should(times(1)).boardList();
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("특정 게시판에 존재하는 게시글 리스트 리턴")
+    void boardDetail() {
+        // given
+        BoardResponseDto response = boardDetailResponse();
+
+        given(boardRepository.boardDetail(BOARD_ID))
+                .willReturn(response);
+
+        // when
+        boardService.boardDetail(BOARD_ID);
+
+        // then
+        then(boardRepository).should(times(1)).boardDetail(any());
     }
 }
