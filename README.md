@@ -17,4 +17,4 @@
 - Mocktito
 
 ## 📈 DB 아키텍처
-![ERD](https://user-images.githubusercontent.com/82927161/209620685-0053af8a-0356-4227-bc49-96c2f77c191c.PNG)
+<img width="980" alt="image" src="https://user-images.githubusercontent.com/82927161/209620685-0053af8a-0356-4227-bc49-96c2f77c191c.PNG">
