@@ -2,8 +2,6 @@ package com.myboard.repository.board;
 
 import com.myboard.entity.*;
 import com.myboard.repository.article.ArticleRepository;
-import com.myboard.repository.articleComment.ArticleCommentRepository;
-import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,20 +30,12 @@ class BoardRepositoryTest {
     private UserRepository userRepository;
 
     @Autowired
-    private ArticleRepository articleRepository;
-
-    @Autowired
     private TestEntityManager testEntityManager;
-
-    // Querydsl 테스트 용도도
-    private EntityManager em;
 
     private User user;
 
     @BeforeEach
     void setUp() {
-        this.em = testEntityManager.getEntityManager();
-
         this.user = User.builder()
                 .username("username")
                 .password("password")
