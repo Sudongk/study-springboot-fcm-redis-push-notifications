@@ -66,10 +66,11 @@ public class BoardServiceTest {
         this.user.setId(1L);
 
         this.board = Board.builder()
-                .boardName("test")
+                .boardName("boardName")
                 .user(this.user)
                 .build();
 
+        this.board.addTags(Tag.convertListToTags(Arrays.asList("tag1", "tag2")));
 
     }
 
@@ -140,8 +141,8 @@ public class BoardServiceTest {
 
     private UpdateBoardDto getUpdateBoardDto() {
         return UpdateBoardDto.builder()
-                .boardName("test")
-                .tagNames(Arrays.asList("test1", "test2"))
+                .boardName("boardName")
+                .tagNames(Arrays.asList("tag1", "tag2"))
                 .build();
     }
 
@@ -251,7 +252,6 @@ public class BoardServiceTest {
 
         then(boardRepository).should(times(1))
                 .deleteById(any());
-
     }
 
     @Test
