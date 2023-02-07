@@ -8,6 +8,7 @@ import com.myboard.dto.responseDto.tag.QTagResponseDto;
 import com.myboard.dto.responseDto.tag.TagResponseDto;
 import com.myboard.entity.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -24,13 +25,10 @@ import static com.myboard.entity.QUser.*;
 import static com.querydsl.core.group.GroupBy.*;
 import static com.querydsl.core.group.GroupBy.list;
 
+@RequiredArgsConstructor
 public class BoardRepositoryExImpl implements BoardRepositoryEx {
 
     private final JPAQueryFactory queryFactory;
-
-    public BoardRepositoryExImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public List<BoardResponseDto> boardList() {

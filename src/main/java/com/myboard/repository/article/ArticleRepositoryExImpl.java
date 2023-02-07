@@ -9,6 +9,7 @@ import com.myboard.entity.QArticleComment;
 import com.myboard.entity.QUser;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
 
@@ -23,13 +24,10 @@ import static com.myboard.entity.QArticleComment.*;
 import static com.myboard.entity.QUser.*;
 import static com.querydsl.core.group.GroupBy.*;
 
+@RequiredArgsConstructor
 public class ArticleRepositoryExImpl implements ArticleRepositoryEx{
 
     private final JPAQueryFactory queryFactory;
-
-    public ArticleRepositoryExImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public ArticleResponseDto articleDetail(Long articleId) {
