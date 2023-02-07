@@ -36,9 +36,6 @@ class BoardRepositoryTest {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private ArticleCommentRepository articleCommentRepository;
-
-    @Autowired
     private TestEntityManager testEntityManager;
 
     // Querydsl 테스트 용도도
@@ -171,5 +168,45 @@ class BoardRepositoryTest {
 
         // then
         assertThat(findBoardList).hasSize(boardList.size());
+    }
+
+    @Test
+    @DisplayName("게시판 수정후 반영된 게시판이 조회된다")
+    void updateBoardAndReturnId() {
+        // given
+        Board board = getBoard();
+        Board savedBoard = boardRepository.save(board);
+
+        // when
+        Board newBoard = Board.builder()
+                .boardName("update boardName")
+                .user(this.user)
+                .build();
+
+        savedBoard.updateBoardName(newBoard.getBoardName());
+
+        testEntityManager.flush();
+
+        // then
+        assertThat(boardRepository.findById(savedBoard.getId())).isPresent();
+        Board updatedBoard = boardRepository.findById(savedBoard.getId()).get();
+        assertThat(updatedBoard.getBoardName()).isEqualTo(newBoard.getBoardName());
+        assertThat(updatedBoard.getUser()).isEqualTo(newBoard.getUser());
+    }
+
+    @Test
+    @DisplayName("게시판 삭제시 삭제된 ID로 조회시 존재하지 않음")
+    void deleteBoard() {
+        // given
+        Board board = getBoard();
+        Board savedBoard = boardRepository.save(board);
+
+        // when
+        boardRepository.deleteById(savedBoard.getId());
+
+        testEntityManager.flush();
+
+        // then
+        assertThat(boardRepository.findById(savedBoard.getId())).isEmpty();
     }
 }
