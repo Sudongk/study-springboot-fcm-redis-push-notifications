@@ -10,6 +10,7 @@ import com.myboard.dto.responseDto.tag.TagResponseDto;
 import com.myboard.entity.QArticle;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,13 +33,10 @@ import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
 @Repository
+@RequiredArgsConstructor
 public class SearchRepository {
 
     private final JPAQueryFactory queryFactory;
-
-    public SearchRepository(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     public Page<BoardResponseDto> searchBoard(SearchParameter searchParameter, Pageable pageable) {
         QArticle article1 = new QArticle("article1");
