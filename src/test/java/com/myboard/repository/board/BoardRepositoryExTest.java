@@ -37,10 +37,13 @@ public class BoardRepositoryExTest extends RepositoryExTest {
 
         // then
         assertThat(boardResponseDtoList).hasSize(1);
+
         assertThat(boardResponseDtoList).extracting(BoardResponseDto::getBoardId)
                 .contains(1L);
+
         assertThat(boardResponseDtoList).extracting(BoardResponseDto::getTotalArticle)
                 .contains(2L);
+
         assertThat(boardResponseDtoList).extracting(BoardResponseDto::getTotalNewArticle)
                 .contains(2L);
 
@@ -65,17 +68,23 @@ public class BoardRepositoryExTest extends RepositoryExTest {
         // then
         assertThat(boardResponse).extracting(BoardResponseDto::getBoardId)
                 .isEqualTo(1L);
+
         assertThat(boardResponse).extracting(BoardResponseDto::getBoardName)
                 .isEqualTo("boardName");
 
         List<ArticleResponseDto> articleResponseDtoList = boardResponse.getArticleResponseDtoList();
+
         assertThat(articleResponseDtoList).hasSize(2);
+
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getUsername)
                 .contains("test user1");
+
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getArticleId)
                 .contains(1L, 2L);
+
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getArticleTitle)
                 .contains("title1", "title2");
+
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getViewCount)
                 .contains(0L);
 

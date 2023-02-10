@@ -1,6 +1,7 @@
 package com.myboard.dto.requestDto.article;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode(of = "articleTitle")
 @NoArgsConstructor
 public class UpdateArticleDto {
 
