@@ -28,7 +28,13 @@ public class ArticleComment extends BaseColumn {
         this.comment = comment;
         this.article = article;
         this.user = user;
-        article.getArticleCommentList().add(this);
+        addCommentToArticle(article);
+    }
+
+    private void addCommentToArticle(Article article) {
+        if (article != null) {
+            article.getArticleCommentList().add(this);
+        }
     }
 
     public void updateArticleComment(String newComment) {

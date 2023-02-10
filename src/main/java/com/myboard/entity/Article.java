@@ -52,7 +52,9 @@ public class Article extends BaseColumn {
     }
 
     public void addArticleToBoard(Board board) {
-        board.getArticleList().add(this);
+        if (board != null) {
+            board.getArticleList().add(this);
+        }
     }
 
     public void updateArticleTitle(String newTitle) {
