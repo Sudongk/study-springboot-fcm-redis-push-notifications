@@ -5,6 +5,7 @@ import com.myboard.aop.valid.CheckExist;
 import com.myboard.aop.valid.EntityType;
 import com.myboard.dto.requestDto.article.CreateArticleDto;
 import com.myboard.dto.requestDto.article.UpdateArticleDto;
+import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.service.article.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,7 @@ public class ArticleController {
      */
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/article/{articleId}")
-    public ResponseEntity<?> getArticle(@CheckExist(type = EntityType.ARTICLE, message = "A005") @PathVariable("articleId") Long articleId) {
+    public ResponseEntity<ArticleResponseDto> articleDetail(@CheckExist(type = EntityType.ARTICLE, message = "A005") @PathVariable("articleId") Long articleId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleService.articleDetail(articleId));
     }
