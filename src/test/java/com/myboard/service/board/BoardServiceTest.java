@@ -67,7 +67,6 @@ public class BoardServiceTest {
                 .build();
 
         this.board.addTags(Tag.convertListToTags(Arrays.asList("tag1", "tag2")));
-
     }
 
     private List<BoardResponseDto> boardListResponse() {

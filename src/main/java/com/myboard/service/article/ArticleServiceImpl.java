@@ -79,6 +79,7 @@ public class ArticleServiceImpl implements ArticleService {
         return articleResponseDto;
     }
 
+    // 불필요한 로직.. 추후 제거하도록
     private Article findArticleForUpdate(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(ArticleNotFoundException::new);

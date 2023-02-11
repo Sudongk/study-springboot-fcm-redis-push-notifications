@@ -363,10 +363,10 @@ public class BoardControllerTest {
     @DisplayName("게시판 상세보기시 해당 게시판에 속한 게시글 리스트 반환")
     void boardDetail() throws Exception {
         // given
-        BoardResponseDto result = boardDetailResponse();
+        BoardResponseDto response = boardDetailResponse();
 
         given(boardService.boardDetail(BOARD_ID))
-                .willReturn(result);
+                .willReturn(response);
 
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/board/{boardId}", BOARD_ID)
@@ -378,9 +378,9 @@ public class BoardControllerTest {
         resultActions
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.boardId", result.getBoardId()).exists())
-                .andExpect(jsonPath("$.boardName", result.getBoardName()).exists())
-                .andExpect(jsonPath("$.createdDateTime", result.getCreatedDateTime()).exists())
+                .andExpect(jsonPath("$.boardId", response.getBoardId()).exists())
+                .andExpect(jsonPath("$.boardName", response.getBoardName()).exists())
+                .andExpect(jsonPath("$.createdDateTime", response.getCreatedDateTime()).exists())
                 .andExpect(jsonPath("$.articleResponseDtoList", hasSize(2)))
         ;
     }

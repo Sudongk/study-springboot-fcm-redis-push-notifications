@@ -4,9 +4,10 @@ import com.google.gson.Gson;
 import com.myboard.aop.resolver.CurrentLoginUserIdResolver;
 import com.myboard.dto.requestDto.article.CreateArticleDto;
 import com.myboard.dto.requestDto.article.UpdateArticleDto;
+import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.exception.GlobalControllerAdvice;
 import com.myboard.service.article.ArticleService;
-import org.hamcrest.Matchers;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import javax.validation.ConstraintViolationException;
+import javax.xml.bind.ValidationException;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
@@ -70,6 +74,14 @@ public class ArticleControllerTest {
 
         given(currentLoginUserIdResolver.resolveArgument(any(), any(), any(), any()))
                 .willReturn(USER_ID);
+    }
+
+    private ArticleResponseDto getArticleResponseDto() {
+        return ArticleResponseDto.builder()
+                .username("username")
+                .articleId(1L)
+                .articleTitle("title")
+                .build();
     }
 
     @Test
@@ -194,13 +206,131 @@ public class ArticleControllerTest {
         // then
         assertThat(
                 resultActions
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn()
-                    .getResponse()
-                    .getContentAsString()
-        ).isEqualTo(ARTICLE_ID_AS_STRING);
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString())
+                .isEqualTo(ARTICLE_ID_AS_STRING);
 
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("게시글 수정 실패 -변경할 게시글 제목 null - 예외, 메세지 검증")
+    void whenNewTitleIsNullMustThrowException() throws Exception {
+        // given
+        UpdateArticleDto request = UpdateArticleDto.builder()
+                .articleTitle(null)
+                .articleContent("newArticleContent")
+                .build();
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/v1/article/{articleId}/update", ARTICLE_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(request))
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        resultActions
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.code", comparesEqualTo("A002")))
+                .andExpect(jsonPath("$.message", comparesEqualTo("게시글 제목은 필수 입력값입니다.")))
+        ;
+
+        then(articleService).should(never()).updateArticle(request, ARTICLE_ID, USER_ID);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시글 수정 실패 -변경할 게시글 내용 null - 예외, 메세지 검증")
+    void whenNewContentIsNullMustThrowException() throws Exception {
+        // given
+        UpdateArticleDto request = UpdateArticleDto.builder()
+                .articleTitle("newTitle")
+                .articleContent(null)
+                .build();
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/v1/article/{articleId}/update", ARTICLE_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(request))
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        resultActions
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.code", comparesEqualTo("A003")))
+                .andExpect(jsonPath("$.message", comparesEqualTo("게시글 내용은 필수 입력값입니다.")))
+        ;
+
+        then(articleService).should(never()).updateArticle(request, ARTICLE_ID, USER_ID);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시글 삭제 성공 - 삭제된 게시글 ID 반환")
+    void deleteArticleSuccessful() throws Exception {
+        // given
+        initCurrentLoginUserIdResolverReturnUserId();
+
+        given(articleService.deleteArticle(ARTICLE_ID, USER_ID))
+                .willReturn(ARTICLE_ID);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                delete("/api/v1/article/{articleId}/delete", ARTICLE_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        assertThat(
+                resultActions
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString())
+                .isEqualTo(ARTICLE_ID_AS_STRING);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("게시글 상세 조회")
+    void articleDetail() throws Exception {
+        // given
+        ArticleResponseDto response = getArticleResponseDto();
+
+        given(articleService.articleDetail(ARTICLE_ID))
+                .willReturn(response);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/v1/article/{articleId}", ARTICLE_ID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+        );
+
+        // then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", response.getUsername()).exists())
+                .andExpect(jsonPath("$.articleId", response.getArticleId()).exists())
+                .andExpect(jsonPath("$.articleTitle", response.getArticleTitle()).exists())
+        ;
+
+        then(articleService).should().articleDetail(ARTICLE_ID);
+    }
 }
