@@ -6,7 +6,6 @@ import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.entity.Article;
 import com.myboard.entity.Board;
 import com.myboard.entity.User;
-import com.myboard.exception.article.ArticleNotFoundException;
 import com.myboard.exception.user.NotAuthorException;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.board.BoardRepository;
@@ -51,8 +50,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public Long updateArticle(UpdateArticleDto updateArticleDto, Long articleId, Long userId) {
-        isArticleOwnedByUser(articleId, userId);
-        Article article = findArticleForUpdate(articleId);
+        Article article = isExistAndArticleOwnedByUser(articleId, userId);
 
         article.updateArticleTitle(updateArticleDto.getArticleTitle());
         article.updateArticleContent(updateArticleDto.getArticleContent());
@@ -65,9 +63,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public Long deleteArticle(Long articleId, Long userId) {
-        isArticleOwnedByUser(articleId, userId);
-        articleRepository.deleteById(articleId);
-        return articleId;
+        Article article = isExistAndArticleOwnedByUser(articleId, userId);
+        articleRepository.deleteById(article.getId());
+
+        return article.getId();
     }
 
     @Override
@@ -75,18 +74,11 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleResponseDto articleDetail(Long articleId) {
         eventPublisher.publishEvent(new ArticleDetailRequestEvent(articleId));
 
-        ArticleResponseDto articleResponseDto = articleRepository.articleDetail(articleId);
-        return articleResponseDto;
+        return articleRepository.articleDetail(articleId);
     }
 
-    // 불필요한 로직.. 추후 제거하도록
-    private Article findArticleForUpdate(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(ArticleNotFoundException::new);
-    }
-
-    private void isArticleOwnedByUser(Long articleId, Long userId) {
-        articleRepository.findIdByUserIdAndArticleId(articleId, userId)
+    private Article isExistAndArticleOwnedByUser(Long articleId, Long userId) {
+        return articleRepository.findByUserIdAndArticleId(articleId, userId)
                 .orElseThrow(NotAuthorException::new);
     }
     
