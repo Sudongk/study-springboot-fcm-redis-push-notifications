@@ -51,7 +51,7 @@ public class Article extends BaseColumn {
         addArticleToBoard(board);
     }
 
-    public void addArticleToBoard(Board board) {
+    private void addArticleToBoard(Board board) {
         if (board != null) {
             board.getArticleList().add(this);
         }

@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleRepositoryEx {
 
-    @Query("SELECT a.id FROM Article a WHERE a.id = :articleId AND a.user.id = :userId")
-    Optional<Long> findIdByUserIdAndArticleId(@Param("articleId") Long articleId, @Param("userId") Long userId);
+    @Query("SELECT a FROM Article a WHERE a.id = :articleId AND a.user.id = :userId")
+    Optional<Article> findByUserIdAndArticleId(@Param("articleId") Long articleId, @Param("userId") Long userId);
 
     @Modifying(flushAutomatically = true)
     @Query("UPDATE Article a SET a.viewCount = a.viewCount + 1 WHERE a.id = :articleId")

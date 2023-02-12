@@ -211,7 +211,7 @@ public class BoardServiceTest {
     @Test
     @WithMockUser
     @DisplayName("로그인한 유저 소유의 게시판이 아닌 경우 업데이트 실패")
-    void whenBoardIsNotBelongUser_shouldNeverUpdate() throws Exception {
+    void whenBoardIsNotBelongsToUserShouldNeverUpdate() throws Exception {
         // given
         UpdateBoardDto request = getUpdateBoardDto();
 
@@ -267,7 +267,6 @@ public class BoardServiceTest {
 
         then(boardRepository).should(never())
                 .deleteById(any());
-
     }
 
     @Test
