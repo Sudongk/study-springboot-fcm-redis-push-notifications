@@ -2,16 +2,13 @@ package com.myboard.service.article;
 
 import com.myboard.dto.requestDto.article.CreateArticleDto;
 import com.myboard.dto.requestDto.article.UpdateArticleDto;
-import com.myboard.dto.requestDto.board.CreateBoardDto;
 import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.entity.*;
 import com.myboard.exception.board.BoardNotFoundException;
 import com.myboard.exception.user.NotAuthorException;
 import com.myboard.repository.article.ArticleRepository;
-import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
-import com.myboard.transactionEvent.article.ArticleViewCountEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
