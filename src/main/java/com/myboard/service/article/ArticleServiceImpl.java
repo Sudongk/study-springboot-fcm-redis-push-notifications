@@ -10,7 +10,7 @@ import com.myboard.exception.user.NotAuthorException;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
-import com.myboard.transactionEvent.article.ArticleDetailRequestEvent;
+import com.myboard.transactionEvent.article.ArticleViewCountEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -72,7 +72,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(readOnly = true)
     public ArticleResponseDto articleDetail(Long articleId) {
-        eventPublisher.publishEvent(new ArticleDetailRequestEvent(articleId));
+        eventPublisher.publishEvent(new ArticleViewCountEvent(articleId));
 
         return articleRepository.articleDetail(articleId);
     }
