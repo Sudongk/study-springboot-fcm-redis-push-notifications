@@ -1,4 +1,4 @@
-package com.myboard.transactionEvent.article;
+package com.myboard.events.article;
 
 import com.myboard.repository.article.ArticleRepository;
 import lombok.RequiredArgsConstructor;

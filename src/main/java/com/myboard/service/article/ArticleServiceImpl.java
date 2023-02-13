@@ -10,7 +10,7 @@ import com.myboard.exception.user.NotAuthorException;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
-import com.myboard.transactionEvent.article.ArticleViewCountEvent;
+import com.myboard.events.article.ArticleViewCountEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

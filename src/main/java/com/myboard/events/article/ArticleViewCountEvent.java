@@ -1,4 +1,4 @@
-package com.myboard.transactionEvent.article;
+package com.myboard.events.article;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

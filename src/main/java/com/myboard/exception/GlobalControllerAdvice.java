@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
-import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
-    @ExceptionHandler(myboardException.class)
-    public ResponseEntity<ErrorResponse> handleMyboardException(myboardException e) {
+    @ExceptionHandler(MyboardException.class)
+    public ResponseEntity<ErrorResponse> handleMyboardException(MyboardException e) {
         log.info(String.format("%s %s", e.getClass().getName(), e.getErrorType().getMessage()), e);
 
         return ResponseEntity.status(e.getHttpStatus())

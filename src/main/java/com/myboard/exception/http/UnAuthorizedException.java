@@ -1,9 +1,9 @@
 package com.myboard.exception.http;
 
-import com.myboard.exception.myboardException;
+import com.myboard.exception.MyboardException;
 import org.springframework.http.HttpStatus;
 
-public class UnAuthorizedException extends myboardException {
+public class UnAuthorizedException extends MyboardException {
     public UnAuthorizedException() {
         super(HttpStatus.UNAUTHORIZED);
     }

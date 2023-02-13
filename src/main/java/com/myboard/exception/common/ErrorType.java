@@ -9,7 +9,7 @@ import com.myboard.exception.articleComment.CommentBlankException;
 import com.myboard.exception.articleComment.CommentLengthException;
 import com.myboard.exception.articleComment.CommentNotFoundException;
 import com.myboard.exception.board.*;
-import com.myboard.exception.myboardException;
+import com.myboard.exception.MyboardException;
 import com.myboard.exception.search.*;
 import com.myboard.exception.user.NotAuthorException;
 import com.myboard.exception.user.SelfConfirmationException;
@@ -35,8 +35,6 @@ public enum ErrorType {
     U006("U006", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
     U007("U007", "비밀번호는 필수 입력값입니다.", ExternalException.class),
     U008("U008", "비밀번호는 최소 8자 이상, 최대 20자까지 입력 가능합니다.", ExternalException.class),
-    U009("U009", "작성자가 아니므로 권한이 없습니다.", SelfConfirmationException.class),
-
 
     B001("B001", "게시판 이름은 30자 이하여야 합니다.", BoardNameLengthException.class),
     B002("B002", "게시판 이름은 필수 입력값입니다.", BoardNameBlankException.class),
@@ -66,9 +64,9 @@ public enum ErrorType {
 
     private final String code;
     private final String message;
-    private final Class<? extends myboardException> classType;
+    private final Class<? extends MyboardException> classType;
 
-    private static final Map<Class<? extends myboardException>, ErrorType> CLASS_ERROR_TYPE_MAP = new HashMap<>();
+    private static final Map<Class<? extends MyboardException>, ErrorType> CLASS_ERROR_TYPE_MAP = new HashMap<>();
 
     // class 초기화 블럭
     static {
@@ -77,7 +75,7 @@ public enum ErrorType {
                 .forEach(errorType -> CLASS_ERROR_TYPE_MAP.put(errorType.classType, errorType));
     }
 
-    public static ErrorType of(Class<? extends myboardException> classType) {
+    public static ErrorType of(Class<? extends MyboardException> classType) {
         if (classType.equals(ExternalException.class)) {
             throw new UnsupportedOperationException("클래스로 ErrorType을 생성할 수 없는 예외입니다.");
         }
