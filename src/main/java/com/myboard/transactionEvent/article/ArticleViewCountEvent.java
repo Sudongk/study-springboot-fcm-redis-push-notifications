@@ -5,11 +5,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ArticleDetailRequestEvent {
+public class ArticleViewCountEvent {
 
     private Long articleId;
 
-    public ArticleDetailRequestEvent(Long articleId) {
+    public ArticleViewCountEvent(Long articleId) {
         this.articleId = articleId;
     }
 }

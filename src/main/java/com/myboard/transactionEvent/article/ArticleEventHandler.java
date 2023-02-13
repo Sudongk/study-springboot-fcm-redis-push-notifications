@@ -20,9 +20,9 @@ public class ArticleEventHandler {
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void increaseViewCount(ArticleDetailRequestEvent articleDetailRequestEvent) {
-        log.info("event listener start, articleId : {}, thread : {}", articleDetailRequestEvent.getArticleId(), Thread.currentThread());
-        articleRepository.increaseViewCount(articleDetailRequestEvent.getArticleId());
+    public void increaseViewCount(ArticleViewCountEvent articleViewCountEvent) {
+        log.info("event listener start, articleId : {}, thread : {}", articleViewCountEvent.getArticleId(), Thread.currentThread());
+        articleRepository.increaseViewCount(articleViewCountEvent.getArticleId());
     }
 
 }

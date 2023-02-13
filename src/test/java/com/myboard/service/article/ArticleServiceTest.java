@@ -11,6 +11,7 @@ import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
+import com.myboard.transactionEvent.article.ArticleViewCountEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,11 +21,14 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -34,6 +38,7 @@ import static org.mockito.Mockito.times;
 
 @DisplayName("게시글 서비스 테스트")
 @MockitoSettings
+@RecordApplicationEvents
 public class ArticleServiceTest {
 
     private static final Long USER_ID = 1L;
@@ -54,6 +59,9 @@ public class ArticleServiceTest {
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
+
+    @Mock
+    private ApplicationEvents applicationEvents;
 
     private User user;
 
@@ -290,12 +298,5 @@ public class ArticleServiceTest {
         // then
         then(articleRepository).should(times(1))
                 .articleDetail(ARTICLE_ID);
-    }
-
-    @Test
-    @WithMockUser
-    @DisplayName("게시글 상세조회시 조회수를 중가시키는 비동기 이벤트 발생 테스트")
-    void increaseViewCountAsync() {
-
     }
 }
