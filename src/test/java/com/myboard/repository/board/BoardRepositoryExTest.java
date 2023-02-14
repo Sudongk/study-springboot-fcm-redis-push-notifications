@@ -4,7 +4,13 @@ import com.myboard.config.TestQuerydslConfig;
 import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.dto.responseDto.tag.TagResponseDto;
+import com.myboard.entity.Article;
+import com.myboard.entity.Board;
+import com.myboard.entity.Tag;
+import com.myboard.entity.User;
 import com.myboard.repository.RepositoryExTest;
+import com.myboard.repository.article.ArticleRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +19,31 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DataJpaTest(showSql = false)
-@Import(TestQuerydslConfig.class)
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BoardRepositoryExTest extends RepositoryExTest {
 
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ArticleRepository articleRepository;
+
     @Test
     @DisplayName("게시판 리스트 조회시 게시판 리스트용 List<BoardResponseDto> 반환")
     void boardList() {
         // given
+        Board board = boardRepository.findAll().stream().findAny().get();
+
+        List<String> boardTags = board.getTags().stream().map(Tag::getName).collect(Collectors.toList());
+
+        List<Article> articles = articleRepository.findByBoardId(board.getId());
+
+        Long size = Long.valueOf(articles.size());
 
         // when
         List<BoardResponseDto> boardResponseDtoList = boardRepository.boardList();
@@ -39,19 +52,19 @@ public class BoardRepositoryExTest extends RepositoryExTest {
         assertThat(boardResponseDtoList).hasSize(1);
 
         assertThat(boardResponseDtoList).extracting(BoardResponseDto::getBoardId)
-                .contains(1L);
+                .contains(board.getId());
 
         assertThat(boardResponseDtoList).extracting(BoardResponseDto::getTotalArticle)
-                .contains(2L);
+                .contains(size);
 
         assertThat(boardResponseDtoList).extracting(BoardResponseDto::getTotalNewArticle)
-                .contains(2L);
+                .contains(size);
 
         for (BoardResponseDto responseDto : boardResponseDtoList) {
             List<TagResponseDto> tags = responseDto.getTags();
 
             assertThat(tags).extracting(TagResponseDto::getTagName)
-                    .contains(Arrays.asList("tag1", "tag2"));
+                    .contains(boardTags);
         }
 
     }
@@ -60,33 +73,43 @@ public class BoardRepositoryExTest extends RepositoryExTest {
     @DisplayName("특정 게시판 조회시 게시판 상세보기용 List<BoardResponseDto> 반환")
     void boardDetail() {
         // given
-        Long boardId = 1L;
+        Board board = boardRepository.findAll().stream().findAny().get();
+
+        List<Article> articles = articleRepository.findAll();
+
+        List<Long> articleIds = articles.stream().map(Article::getId).collect(Collectors.toList());
+
+        List<String> articleTitles = articles.stream().map(Article::getTitle).collect(Collectors.toList());
+
+        List<String> usernames = articles.stream().map(Article::getUser).map(User::getUsername).collect(Collectors.toList());
+
+        List<Long> viewCounts = articles.stream().map(Article::getViewCount).collect(Collectors.toList());
 
         // when
-        BoardResponseDto boardResponse = boardRepository.boardDetail(boardId);
+        BoardResponseDto boardResponse = boardRepository.boardDetail(board.getId());
 
         // then
         assertThat(boardResponse).extracting(BoardResponseDto::getBoardId)
-                .isEqualTo(1L);
+                .isEqualTo(board.getId());
 
         assertThat(boardResponse).extracting(BoardResponseDto::getBoardName)
-                .isEqualTo("boardName");
+                .isEqualTo(board.getBoardName());
 
         List<ArticleResponseDto> articleResponseDtoList = boardResponse.getArticleResponseDtoList();
 
-        assertThat(articleResponseDtoList).hasSize(2);
+        assertThat(articleResponseDtoList).hasSize(articles.size());
 
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getUsername)
-                .contains("test user1");
+                .contains(usernames.get(0), usernames.get(1));
 
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getArticleId)
-                .contains(1L, 2L);
+                .contains(articleIds.get(0), articleIds.get(1));
 
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getArticleTitle)
-                .contains("title1", "title2");
+                .contains(articleTitles.get(0), articleTitles.get(0));
 
         assertThat(articleResponseDtoList).extracting(ArticleResponseDto::getViewCount)
-                .contains(0L);
+                .contains(viewCounts.get(0), viewCounts.get(1));
 
     }
 

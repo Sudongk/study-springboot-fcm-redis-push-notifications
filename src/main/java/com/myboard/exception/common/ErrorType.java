@@ -12,7 +12,6 @@ import com.myboard.exception.board.*;
 import com.myboard.exception.MyboardException;
 import com.myboard.exception.search.*;
 import com.myboard.exception.user.NotAuthorException;
-import com.myboard.exception.user.SelfConfirmationException;
 import com.myboard.exception.user.UserNameDuplicatedException;
 import com.myboard.exception.user.UserNotFoundException;
 import lombok.AllArgsConstructor;

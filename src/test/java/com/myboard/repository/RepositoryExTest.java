@@ -6,6 +6,7 @@ import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -43,6 +44,7 @@ public class RepositoryExTest{
         initArticle();
         initArticleComment();
     }
+
 
     private void initUser() {
         this.user1 = User.builder()

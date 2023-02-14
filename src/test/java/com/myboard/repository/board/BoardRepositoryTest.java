@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
+@ActiveProfiles("test")
 @Import({TestQuerydslConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BoardRepositoryTest {
@@ -43,8 +45,6 @@ class BoardRepositoryTest {
                 .role(User.Role.USER)
                 .build();
 
-        this.user.setId(1L);
-
         userRepository.save(user);
     }
 
@@ -56,7 +56,6 @@ class BoardRepositoryTest {
     }
 
     private List<Board> getBoardList() {
-
         List<Board> boardList = new ArrayList<>();
 
         Board board1 = getBoard();
@@ -110,6 +109,7 @@ class BoardRepositoryTest {
         Board board = getBoard();
 
         Board savedBoard = boardRepository.save(board);
+
         // when
         Optional<Board> findBoard = boardRepository.findById(savedBoard.getId());
 
@@ -190,13 +190,13 @@ class BoardRepositoryTest {
         // given
         Board board = getBoard();
         Board savedBoard = boardRepository.save(board);
+        Long boardId = savedBoard.getId();
+        System.out.println(boardId);
 
         // when
-        boardRepository.deleteById(savedBoard.getId());
-
-        testEntityManager.flush();
+        boardRepository.deleteById(boardId);
 
         // then
-        assertThat(boardRepository.findById(savedBoard.getId())).isEmpty();
+        assertThat(boardRepository.findById(boardId)).isEmpty();
     }
 }
