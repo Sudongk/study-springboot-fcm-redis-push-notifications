@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,6 +16,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
 
     @Query("SELECT a FROM Article a WHERE a.id = :articleId AND a.user.id = :userId")
     Optional<Article> findByUserIdAndArticleId(@Param("articleId") Long articleId, @Param("userId") Long userId);
+
+    @Query("SELECT a FROM Article a WHERE a.board.id = :boardId")
+    List<Article> findByBoardId(@Param("boardId") Long boardId);
 
     @Modifying(flushAutomatically = true)
     @Query("UPDATE Article a SET a.viewCount = a.viewCount + 1 WHERE a.id = :articleId")
