@@ -1,6 +1,5 @@
 package com.myboard.repository.board;
 
-import com.myboard.config.TestQuerydslConfig;
 import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.dto.responseDto.tag.TagResponseDto;
@@ -10,13 +9,9 @@ import com.myboard.entity.Tag;
 import com.myboard.entity.User;
 import com.myboard.repository.RepositoryExTest;
 import com.myboard.repository.article.ArticleRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -41,7 +36,7 @@ public class BoardRepositoryExTest extends RepositoryExTest {
 
         List<String> boardTags = board.getTags().stream().map(Tag::getName).collect(Collectors.toList());
 
-        List<Article> articles = articleRepository.findByBoardId(board.getId());
+        List<Article> articles = articleRepository.findAllByBoardId(board.getId());
 
         Long size = Long.valueOf(articles.size());
 

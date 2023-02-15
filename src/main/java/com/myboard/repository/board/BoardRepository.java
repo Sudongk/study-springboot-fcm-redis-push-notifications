@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryEx {
 
-    List<Board> findByIdIn(List<Long> boardIds);
-
     @Query("select b from Board b where b.user.id in (:userIds)")
     List<Board> findAllByUserIds(@Param("userIds") List<Long> userIds);
 

@@ -119,7 +119,7 @@ class BoardRepositoryTest {
     }
 
     @Test
-    @DisplayName("게시판 리스트 반환")
+    @DisplayName("게시판 아이디로 게시판 리스트 반환")
     void returnBoardListByIds() {
         // given
         List<Board> getBoardList = getBoardList();
@@ -133,7 +133,7 @@ class BoardRepositoryTest {
         testEntityManager.clear();
 
         // when
-        List<Board> findBoardList = boardRepository.findByIdIn(boardIds);
+        List<Board> findBoardList = boardRepository.findAllById(boardIds);
 
         // then
         assertThat(findBoardList).hasSize(boardList.size());
@@ -148,7 +148,8 @@ class BoardRepositoryTest {
         List<Board> boardList = boardRepository.saveAllAndFlush(getBoardList);
 
         List<Long> userIds = boardList.stream()
-                .map(board -> board.getUser().getId())
+                .map(Board::getUser)
+                .map(User::getId)
                 .collect(Collectors.toList());
 
         testEntityManager.clear();
@@ -161,8 +162,8 @@ class BoardRepositoryTest {
     }
 
     @Test
-    @DisplayName("게시판 수정후 반영된 게시판이 조회된다")
-    void updateBoardAndReturnId() {
+    @DisplayName("게시판 수정후 반영된 게시판 조회")
+    void updateBoard() {
         // given
         Board board = getBoard();
         Board savedBoard = boardRepository.save(board);
@@ -178,20 +179,19 @@ class BoardRepositoryTest {
         testEntityManager.flush();
 
         // then
-        assertThat(boardRepository.findById(savedBoard.getId())).isPresent();
-        Board updatedBoard = boardRepository.findById(savedBoard.getId()).get();
-        assertThat(updatedBoard.getBoardName()).isEqualTo(newBoard.getBoardName());
-        assertThat(updatedBoard.getUser()).isEqualTo(newBoard.getUser());
+        Optional<Board> updatedBoard = boardRepository.findById(savedBoard.getId());
+        assertThat(updatedBoard).isPresent();
+        assertThat(updatedBoard.get().getBoardName()).isEqualTo(newBoard.getBoardName());
+        assertThat(updatedBoard.get().getUser()).isEqualTo(newBoard.getUser());
     }
 
     @Test
-    @DisplayName("게시판 삭제시 삭제된 ID로 조회시 존재하지 않음")
+    @DisplayName("게시판 삭제후 삭제된 ID로 조회시 존재하지 않음")
     void deleteBoard() {
         // given
         Board board = getBoard();
         Board savedBoard = boardRepository.save(board);
         Long boardId = savedBoard.getId();
-        System.out.println(boardId);
 
         // when
         boardRepository.deleteById(boardId);
