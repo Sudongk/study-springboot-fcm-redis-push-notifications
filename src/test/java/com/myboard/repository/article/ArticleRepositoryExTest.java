@@ -9,7 +9,6 @@ import com.myboard.entity.User;
 import com.myboard.repository.RepositoryExTest;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.user.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

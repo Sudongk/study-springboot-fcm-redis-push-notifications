@@ -48,9 +48,6 @@ public class ArticleViewCountEventTest {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @Autowired
-    private EntityManager entityManager;
-
     private User user;
     private Board board;
     private Article article;
