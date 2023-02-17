@@ -2,13 +2,11 @@ package com.myboard.dto.requestDto.search;
 
 import com.myboard.exception.search.InvalidPageSizeException;
 import com.myboard.exception.search.InvalidPageStartException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.domain.PageRequest;
 
 @Getter
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchParameter {
@@ -17,6 +15,7 @@ public class SearchParameter {
     private static final int MIN_PAGE_SIZE = 20;
     private static final int MAX_PAGE_SIZE = 50;
 
+    private static final double id = Math.random();
     private SearchKeyword searchKeyword;
     private SearchType searchType;
     private int start;
