@@ -33,7 +33,6 @@ public class SearchParamsArgumentResolver implements HandlerMethodArgumentResolv
         while (parameterNames.hasMoreElements()) {
             String name = parameterNames.nextElement();
             parameterMap.put(name, nativeRequest.getParameter(name));
-
         }
 
         return SearchParameter.of(
