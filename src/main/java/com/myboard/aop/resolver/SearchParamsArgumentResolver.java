@@ -28,6 +28,8 @@ public class SearchParamsArgumentResolver implements HandlerMethodArgumentResolv
         HttpServletRequest nativeRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 
         Map<String, String> parameterMap = new HashMap<>();
+
+        // keyword, type, start, size
         Enumeration<String> parameterNames = nativeRequest.getParameterNames();
 
         while (parameterNames.hasMoreElements()) {
