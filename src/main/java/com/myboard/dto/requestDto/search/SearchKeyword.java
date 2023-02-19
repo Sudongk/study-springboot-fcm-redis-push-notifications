@@ -3,11 +3,13 @@ package com.myboard.dto.requestDto.search;
 import com.myboard.exception.search.LongSearchKeywordException;
 import com.myboard.exception.search.SearchKeywordNullException;
 import com.myboard.exception.search.ShortSearchKeywordException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Getter
+@EqualsAndHashCode(of = "value")
 public class SearchKeyword {
 
     private static final int KEYWORD_MIN_LENGTH = 1;
@@ -20,11 +22,11 @@ public class SearchKeyword {
     }
 
     public static SearchKeyword of(String value) {
-        String newString = value.toLowerCase();
-        validateNonNull(newString);
-        validateLength(newString);
+        validateNonNull(value);
+        String replaceValue = replaceValue(value);
+        validateLength(replaceValue);
 
-        return new SearchKeyword(newString);
+        return new SearchKeyword(replaceValue);
     }
 
     private static void validateNonNull(String value) {
@@ -42,4 +44,7 @@ public class SearchKeyword {
         }
     }
 
+    private static String replaceValue(String value) {
+        return value.replaceAll("(\\t|\r\n|\r|\n|\n\r)", " ");
+    }
 }
