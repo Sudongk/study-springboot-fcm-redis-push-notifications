@@ -30,5 +30,4 @@ public enum SearchType {
                 .findFirst()
                 .orElseThrow(InvalidSearchTypeException::new);
     }
-
 }
