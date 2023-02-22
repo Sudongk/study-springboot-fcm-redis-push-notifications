@@ -6,10 +6,10 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -28,7 +28,7 @@ public class Tag {
         validateNull(tagName);
         validateBlank(tagName);
         validateLength(tagName);
-        this.name = tagName;
+        this.name = trimAndToLowerCase(tagName);
     }
 
     public static Tag of(String tagName) {
@@ -57,6 +57,10 @@ public class Tag {
         if (value.length() > MAX_LENGTH) {
             throw new TagNameLengthException();
         }
+    }
+    
+    private String trimAndToLowerCase(String value) {
+        return value.trim().toLowerCase(Locale.ROOT);
     }
 }
 
