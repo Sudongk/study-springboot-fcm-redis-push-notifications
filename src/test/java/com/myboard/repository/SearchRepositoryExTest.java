@@ -6,7 +6,6 @@ import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -18,7 +17,7 @@ import java.util.Arrays;
 @DataJpaTest(showSql = false)
 @Import(TestQuerydslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class RepositoryExTest {
+public class SearchRepositoryExTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,9 +32,9 @@ public class RepositoryExTest {
     private ArticleCommentRepository articleCommentRepository;
 
     protected User user1, user2;
-    protected Board board;
-    protected Article article1, article2;
-    protected ArticleComment articleComment1, articleComment2;
+    protected Board board1, board2, board3, board4;
+    protected Article article1, article2, article3, article4;
+    protected ArticleComment articleComment1, articleComment2, articleComment3, articleComment4;
 
     @BeforeEach
     void setUp() {
@@ -45,16 +44,15 @@ public class RepositoryExTest {
         initArticleComment();
     }
 
-
     private void initUser() {
         this.user1 = User.builder()
-                .username("test user1")
+                .username("user1")
                 .password("password")
                 .role(User.Role.USER)
                 .build();
 
         this.user2 = User.builder()
-                .username("test user2")
+                .username("user2")
                 .password("password")
                 .role(User.Role.USER)
                 .build();
@@ -64,14 +62,38 @@ public class RepositoryExTest {
     }
 
     private void initBoard() {
-        this.board = Board.builder()
-                .boardName("boardName")
+        this.board1 = Board.builder()
+                .boardName("Java")
                 .user(this.user1)
                 .build();
 
-        this.board.addTags(Tag.convertListToTags(Arrays.asList("tag1", "tag2")));
+        this.board1.addTags(Tag.convertListToTags(Arrays.asList("java", "it")));
 
-        boardRepository.save(board);
+        this.board2 = Board.builder()
+                .boardName("Spring")
+                .user(this.user2)
+                .build();
+
+        this.board2.addTags(Tag.convertListToTags(Arrays.asList("trip", "car")));
+
+        this.board3 = Board.builder()
+                .boardName("I Love Java")
+                .user(this.user1)
+                .build();
+
+        this.board3.addTags(Tag.convertListToTags(Arrays.asList("java", "it")));
+
+        this.board4 = Board.builder()
+                .boardName("I Love Spring")
+                .user(this.user2)
+                .build();
+
+        this.board4.addTags(Tag.convertListToTags(Arrays.asList("spring")));
+
+        boardRepository.save(board1);
+        boardRepository.save(board2);
+        boardRepository.save(board3);
+        boardRepository.save(board4);
     }
 
     private void initArticle() {
@@ -80,7 +102,7 @@ public class RepositoryExTest {
                 .content("content1")
                 .viewCount(0L)
                 .user(this.user1)
-                .board(this.board)
+                .board(this.board1)
                 .build();
 
         this.article2 = Article.builder()
@@ -88,11 +110,29 @@ public class RepositoryExTest {
                 .content("content2")
                 .viewCount(0L)
                 .user(this.user1)
-                .board(this.board)
+                .board(this.board1)
+                .build();
+
+        this.article3 = Article.builder()
+                .title("title3")
+                .content("content3")
+                .viewCount(0L)
+                .user(this.user2)
+                .board(this.board2)
+                .build();
+
+        this.article4 = Article.builder()
+                .title("title4")
+                .content("content4")
+                .viewCount(0L)
+                .user(this.user2)
+                .board(this.board2)
                 .build();
 
         articleRepository.save(article1);
         articleRepository.save(article2);
+        articleRepository.save(article3);
+        articleRepository.save(article4);
     }
 
     private void initArticleComment() {
@@ -108,8 +148,21 @@ public class RepositoryExTest {
                 .article(this.article2)
                 .build();
 
+        this.articleComment3 = ArticleComment.builder()
+                .comment("comment3")
+                .user(this.user1)
+                .article(this.article3)
+                .build();
+
+        this.articleComment4 = ArticleComment.builder()
+                .comment("comment4")
+                .user(this.user1)
+                .article(this.article4)
+                .build();
+
         articleCommentRepository.save(articleComment1);
         articleCommentRepository.save(articleComment2);
+        articleCommentRepository.save(articleComment3);
+        articleCommentRepository.save(articleComment4);
     }
 }
-

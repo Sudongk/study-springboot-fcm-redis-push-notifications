@@ -26,7 +26,7 @@ public class SearchServiceImpl implements SearchService {
         String type = searchParameter.getSearchType().getValue();
         String articleType = SearchType.ARTICLE.getValue();
         String boardType = SearchType.BOARD.getValue();
-        PageRequest pageRequest = searchParameter.ofPageRequest();
+        PageRequest pageRequest = searchParameter.getPageRequest();
 
         SearchResponseDto result = new SearchResponseDto();
 

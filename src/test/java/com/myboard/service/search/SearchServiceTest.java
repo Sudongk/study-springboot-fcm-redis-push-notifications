@@ -31,7 +31,7 @@ public class SearchServiceTest {
         String keyword = "Java";
         String searchType = "board";
         SearchParameter searchParameter = SearchParameter.of(keyword, searchType, "0", "20");
-        PageRequest pageRequest = searchParameter.ofPageRequest();
+        PageRequest pageRequest = searchParameter.getPageRequest();
 
         Page<BoardResponseDto> mockPage = mock(Page.class);
 
@@ -53,7 +53,7 @@ public class SearchServiceTest {
         String keyword = "Java";
         String searchType = "article";
         SearchParameter searchParameter = SearchParameter.of(keyword, searchType, "0", "20");
-        PageRequest pageRequest = searchParameter.ofPageRequest();
+        PageRequest pageRequest = searchParameter.getPageRequest();
 
         Page<ArticleResponseDto> mockPage = mock(Page.class);
 
