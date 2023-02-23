@@ -30,7 +30,7 @@ public class SearchParameter {
         );
     }
 
-    public PageRequest ofPageRequest() {
+    public PageRequest getPageRequest() {
         return PageRequest.of(start, size);
     }
 
