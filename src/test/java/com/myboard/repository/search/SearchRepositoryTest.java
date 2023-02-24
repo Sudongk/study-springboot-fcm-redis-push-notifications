@@ -2,11 +2,10 @@ package com.myboard.repository.search;
 
 import com.myboard.dto.requestDto.search.SearchParameter;
 import com.myboard.dto.requestDto.search.SearchType;
+import com.myboard.dto.responseDto.article.ArticleResponseDto;
 import com.myboard.dto.responseDto.board.BoardResponseDto;
 import com.myboard.dto.responseDto.tag.TagResponseDto;
-import com.myboard.entity.Tag;
 import com.myboard.repository.SearchRepositoryExTest;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -29,7 +29,7 @@ class SearchRepositoryTest extends SearchRepositoryExTest {
 
     @Test
     @DisplayName("게시판 검색 성공 - 결과값에 해당 키워드가 포함되어야 한다")
-    void searchFromKeyword() {
+    void searchBoardFromKeyword() {
         // given
         String keyword = "Spring";
         String type = SearchType.BOARD.getValue();
@@ -73,5 +73,51 @@ class SearchRepositoryTest extends SearchRepositoryExTest {
                     .extracting(TagResponseDto::getTagName)
                     .allMatch(tagNames -> tagNames.containsAll(Arrays.asList("java", "it")));
         }
+    }
+
+    @Test
+    @DisplayName("게시글 검색 성공 - 결과값에 해당 키워드가 포함되어야 한다")
+    void searchArticleFromKeyword() {
+        // given
+        String keyword = "Java";
+        String type = SearchType.ARTICLE.getValue();
+
+        SearchParameter searchParameter = SearchParameter.of(keyword, type, "0", "20");
+        PageRequest pageRequest = searchParameter.getPageRequest();
+
+        // when
+        Page<ArticleResponseDto> articleResponseDtoList = searchRepository.searchArticle(searchParameter, pageRequest);
+        List<ArticleResponseDto> result = articleResponseDtoList.toList();
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result).extracting(ArticleResponseDto::getArticleTitle)
+                .allMatch(articleTitle -> articleTitle.contains("Java"));
+    }
+
+    @Test
+    @DisplayName("게시글 검색 성공 - 결과값에 해당 게시글에 있는 댓글이 포함되어야 한다")
+    void searchArticleFromKeywordMustContainsComments() {
+        // given
+        String keyword = "IT";
+        String type = SearchType.ARTICLE.getValue();
+
+        SearchParameter searchParameter = SearchParameter.of(keyword, type, "0", "20");
+        PageRequest pageRequest = searchParameter.getPageRequest();
+
+        // when
+        Page<ArticleResponseDto> articleResponseDtoList = searchRepository.searchArticle(searchParameter, pageRequest);
+        List<ArticleResponseDto> result = articleResponseDtoList.toList();
+
+        // then
+        assertThat(result).hasSize(1);
+        assertThat(result).extracting(ArticleResponseDto::getArticleTitle)
+                .allMatch(articleTitle -> articleTitle.contains("IT"));
+
+        List<Long> totalArticleComment = result.stream()
+                .map(ArticleResponseDto::getTotalArticleComment)
+                .collect(Collectors.toList());
+
+        assertThat(totalArticleComment).contains(1L);
     }
 }
