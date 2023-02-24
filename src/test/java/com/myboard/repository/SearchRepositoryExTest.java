@@ -98,32 +98,32 @@ public class SearchRepositoryExTest {
 
     private void initArticle() {
         this.article1 = Article.builder()
-                .title("title1")
-                .content("content1")
+                .title("Java")
+                .content("Java Spring")
                 .viewCount(0L)
                 .user(this.user1)
                 .board(this.board1)
                 .build();
 
         this.article2 = Article.builder()
-                .title("title2")
-                .content("content2")
+                .title("Java")
+                .content("movie")
                 .viewCount(0L)
                 .user(this.user1)
                 .board(this.board1)
                 .build();
 
         this.article3 = Article.builder()
-                .title("title3")
-                .content("content3")
+                .title("IT")
+                .content("IT")
                 .viewCount(0L)
                 .user(this.user2)
                 .board(this.board2)
                 .build();
 
         this.article4 = Article.builder()
-                .title("title4")
-                .content("content4")
+                .title("TRIP")
+                .content("TRIP")
                 .viewCount(0L)
                 .user(this.user2)
                 .board(this.board2)
