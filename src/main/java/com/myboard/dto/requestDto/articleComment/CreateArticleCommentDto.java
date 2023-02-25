@@ -1,6 +1,7 @@
 package com.myboard.dto.requestDto.articleComment;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -8,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@EqualsAndHashCode(of = "comment")
 @NoArgsConstructor
 public class CreateArticleCommentDto {
 
