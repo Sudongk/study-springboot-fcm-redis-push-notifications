@@ -13,14 +13,4 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class ArticleCommentRepositoryTest {
 
-    @Autowired
-    ArticleCommentRepository articleCommentRepository;
-
-    @Test
-    void findIdByUserIdAndArticleId() {
-        Optional<Long> idByUserIdAndArticleCommentId = articleCommentRepository.findIdByUserIdAndArticleCommentId(1L, 1L);
-        idByUserIdAndArticleCommentId.ifPresent(System.out::println);
-    }
-
-
 }
