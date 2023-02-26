@@ -44,8 +44,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService{
     @Override
     @Transactional
     public Long updateArticleComment(UpdateArticleCommentDto updateArticleCommentDto, Long articleCommentId, Long userId) {
-        isArticleCommentOwnedByUser(articleCommentId, userId);
-        ArticleComment articleComment = findArticleCommentForUpdate(articleCommentId);
+        ArticleComment articleComment = isArticleCommentOwnedByUser(articleCommentId, userId);
 
         articleComment.updateArticleComment(updateArticleCommentDto.getComment());
 
@@ -63,13 +62,8 @@ public class ArticleCommentServiceImpl implements ArticleCommentService{
         return articleCommentId;
     }
 
-    private ArticleComment findArticleCommentForUpdate(Long articleCommentId) {
-        return articleCommentRepository.findById(articleCommentId)
-                .orElseThrow(CommentNotFoundException::new);
-    }
-
-    private void isArticleCommentOwnedByUser(Long articleCommentId, Long userId) {
-        articleCommentRepository.findIdByUserIdAndArticleCommentId(articleCommentId, userId)
+    private ArticleComment isArticleCommentOwnedByUser(Long articleCommentId, Long userId) {
+        return articleCommentRepository.findIdByUserIdAndArticleCommentId(articleCommentId, userId)
                 .orElseThrow(NotAuthorException::new);
     }
 }
