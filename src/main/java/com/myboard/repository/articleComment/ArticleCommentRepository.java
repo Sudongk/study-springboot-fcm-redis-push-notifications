@@ -16,6 +16,6 @@ public interface ArticleCommentRepository extends JpaRepository<ArticleComment, 
     List<ArticleComment> findByArticleId(@Param("articleId") Long articleId);
 
     @Query("SELECT ac FROM ArticleComment ac WHERE ac.id = :articleCommentId AND ac.user.id = :userId")
-    Optional<ArticleComment> findIdByUserIdAndArticleCommentId(Long articleCommentId, Long userId);
+    Optional<ArticleComment> findByArticleCommentIdAndUserId(Long articleCommentId, Long userId);
 
 }

@@ -5,7 +5,6 @@ import com.myboard.dto.requestDto.articleComment.UpdateArticleCommentDto;
 import com.myboard.entity.Article;
 import com.myboard.entity.ArticleComment;
 import com.myboard.entity.User;
-import com.myboard.exception.articleComment.CommentNotFoundException;
 import com.myboard.exception.user.NotAuthorException;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
@@ -13,8 +12,6 @@ import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -56,14 +53,14 @@ public class ArticleCommentServiceImpl implements ArticleCommentService{
     @Override
     @Transactional
     public Long deleteArticleComment(Long articleCommentId, Long userId) {
-        isArticleCommentOwnedByUser(articleCommentId, userId);
-        articleCommentRepository.deleteById(articleCommentId);
+        ArticleComment articleComment = isArticleCommentOwnedByUser(articleCommentId, userId);
+        articleCommentRepository.deleteById(articleComment.getId());
 
-        return articleCommentId;
+        return articleComment.getId();
     }
 
     private ArticleComment isArticleCommentOwnedByUser(Long articleCommentId, Long userId) {
-        return articleCommentRepository.findIdByUserIdAndArticleCommentId(articleCommentId, userId)
+        return articleCommentRepository.findByArticleCommentIdAndUserId(articleCommentId, userId)
                 .orElseThrow(NotAuthorException::new);
     }
 }
