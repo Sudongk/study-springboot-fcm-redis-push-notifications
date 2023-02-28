@@ -165,6 +165,7 @@ class ArticleRepositoryTest {
 
         List<Long> articleIds = articleList.stream()
                 .map(BaseColumn::getId)
+                .distinct()
                 .collect(Collectors.toList());
 
         testEntityManager.clear();
@@ -187,6 +188,7 @@ class ArticleRepositoryTest {
         List<Long> userIds = articleList.stream()
                 .map(Article::getUser)
                 .map(User::getId)
+                .distinct()
                 .collect(Collectors.toList());
 
         testEntityManager.clear();
@@ -209,6 +211,7 @@ class ArticleRepositoryTest {
         List<Long> boardIds = articleList.stream()
                 .map(Article::getBoard)
                 .map(Board::getId)
+                .distinct()
                 .collect(Collectors.toList());
 
         testEntityManager.clear();
