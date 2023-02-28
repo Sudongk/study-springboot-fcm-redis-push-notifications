@@ -52,16 +52,12 @@ class ArticleRepositoryTest {
                 .role(User.Role.USER)
                 .build();
 
-        this.user.setId(1L);
-
         userRepository.save(user);
 
         this.board = Board.builder()
                 .boardName("boardName")
                 .user(this.user)
                 .build();
-
-        this.board.setId(1L);
 
         this.board.addTags(Tag.convertListToTags(Arrays.asList("tag1", "tag2")));
 
@@ -232,9 +228,7 @@ class ArticleRepositoryTest {
 
         List<Article> articleList = articleRepository.saveAllAndFlush(getArticleList);
 
-        Long boardId = articleList.stream().findFirst().get().getId();
-
-        testEntityManager.clear();
+        Long boardId = articleList.stream().findFirst().get().getBoard().getId();
 
         // when
         List<Article> findArticleList = articleRepository.findAllByBoardId(boardId);
