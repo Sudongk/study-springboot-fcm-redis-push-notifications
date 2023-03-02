@@ -5,7 +5,6 @@ import com.myboard.entity.*;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

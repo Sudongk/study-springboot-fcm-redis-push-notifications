@@ -4,6 +4,10 @@ import com.myboard.exception.search.InvalidPageSizeException;
 import com.myboard.exception.search.InvalidPageStartException;
 import lombok.*;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @EqualsAndHashCode(of = "id")
@@ -56,6 +60,22 @@ public class SearchParameter {
         } catch (NumberFormatException e) {
             return MIN_PAGE_SIZE;
         }
+    }
+
+    public static Map<String, Object> toMap(SearchParameter searchParameter) {
+        Map<String, Object> searchParameterMap = new HashMap<>();
+
+        String searchKeyword = searchParameter.getSearchKeyword().getValue();
+        String searchType = searchParameter.getSearchType().getValue();
+        int start = searchParameter.getStart();
+        int size = searchParameter.getSize();
+
+        searchParameterMap.put("SearchKeyword", searchKeyword);
+        searchParameterMap.put("SearchType", searchType);
+        searchParameterMap.put("Start", start);
+        searchParameterMap.put("Size", size);
+
+        return searchParameterMap;
     }
 
 }
