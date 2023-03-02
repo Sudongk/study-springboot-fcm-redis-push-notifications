@@ -40,7 +40,23 @@ public class SecurityConfig {
 
         inMemoryUser.createUser(
                 User.builder()
-                        .username("user")
+                        .username("user1")
+                        .password(PasswordEncoder().encode("password"))
+                        .roles("USER")
+                        .build()
+        );
+
+        inMemoryUser.createUser(
+                User.builder()
+                        .username("user2")
+                        .password(PasswordEncoder().encode("password"))
+                        .roles("USER")
+                        .build()
+        );
+
+        inMemoryUser.createUser(
+                User.builder()
+                        .username("user3")
                         .password(PasswordEncoder().encode("password"))
                         .roles("USER")
                         .build()
