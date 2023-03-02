@@ -25,3 +25,8 @@ spring:
 
 jwt:
   secret_key: zckcriwtzydklapagkzaxplmrzcrhhzkqsbiwxnflwqmvevghnmpyotmdjgxwrxbanqjtsukiuhvlyccwisjthyxecidxrqtdjvpaoabuvrouyhzjoijdkojwczuldnvnbmrnwpzajwyvoiejxychvnglaezkvem
+
+fcm:
+  key:
+    path: board-api-e5a2c-firebase-adminsdk-fubgi-e15e1f43ed.json
+    scope: https://www.googleapis.com/auth/cloud-platform
