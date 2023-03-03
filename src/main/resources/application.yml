@@ -19,6 +19,11 @@ spring:
     username: root
     password: rlatnehd@123
 
+  redis:
+    host: localhost
+    port: 6378
+
+
 #rsa:
 #  private-key: classpath:certs/private.pem
 #  public-key: classpath:certs/public.pem
@@ -28,5 +33,5 @@ jwt:
 
 fcm:
   key:
-    path: board-api-e5a2c-firebase-adminsdk-fubgi-e15e1f43ed.json
+    path: /firebase/board-api-e5a2c-firebase-adminsdk-fubgi-e15e1f43ed.json
     scope: https://www.googleapis.com/auth/cloud-platform
