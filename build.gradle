@@ -55,7 +55,7 @@ dependencies {
 
     implementation group: 'com.google.firebase', name: 'firebase-admin', version: '6.8.1'
 
-    implementation 'org.springframework.data:spring-data-redis:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
