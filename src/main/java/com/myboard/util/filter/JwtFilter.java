@@ -45,7 +45,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().startsWith("/api/v1/login");
+        boolean whenLogin = request.getRequestURI().startsWith("/api/v1/login");
+        boolean whenSignUp = request.getRequestURI().startsWith("/api/v1/user/create");
+
+        return whenLogin || whenSignUp;
     }
 
     private String getJwtToken(HttpServletRequest servletRequest) {
