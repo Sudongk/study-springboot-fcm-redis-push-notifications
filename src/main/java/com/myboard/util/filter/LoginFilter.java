@@ -41,14 +41,13 @@ public class LoginFilter extends OncePerRequestFilter {
         String password = request.getHeader("password");
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
         response.setHeader(HttpHeaders.AUTHORIZATION, generateToken(authentication));
 
-        Long userId = userRepository.findIdByUsername(String.valueOf(username))
-                .orElseThrow(UserNotFoundException::new);
-
-        httpSession.setAttribute("USER_ID", userId);
-        httpSession.setMaxInactiveInterval(600);
+//        Long userId = userRepository.findIdByUsername(String.valueOf(username))
+//                .orElseThrow(UserNotFoundException::new);
+//
+//        httpSession.setAttribute("USER_ID", userId);
+//        httpSession.setMaxInactiveInterval(600);
     }
 
     @Override

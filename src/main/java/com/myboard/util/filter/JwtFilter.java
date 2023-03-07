@@ -1,5 +1,6 @@
 package com.myboard.util.filter;
 
+import com.myboard.exception.token.TokenNotValidException;
 import com.myboard.util.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
         return Optional.ofNullable(servletRequest.getHeader(HttpHeaders.AUTHORIZATION))
                 .filter(auth -> auth.startsWith("Bearer "))
                 .map(auth -> auth.replace("Bearer ", ""))
-                .orElseThrow(() -> new BadCredentialsException("유효하지 않은 토큰입니다. 다시 로그인"));
+                .orElseThrow(TokenNotValidException::new);
     }
 
     private Authentication createAuthentication(Map<String, Object> claims) {
