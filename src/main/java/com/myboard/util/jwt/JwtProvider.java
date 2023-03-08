@@ -2,7 +2,7 @@ package com.myboard.util.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,12 +13,13 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
+@Slf4j
 @Component
-public class JwtTokenProvider {
+public class JwtProvider {
 
     private final Key key;
 
-    public JwtTokenProvider(@Value("${jwt.secret_key}") String secret) {
+    public JwtProvider(@Value("${jwt.secret_key}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -28,7 +29,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject(sub)
                 .addClaims(claims)
-                .setExpiration(Date.from(now.plus(1, ChronoUnit.DAYS)))
+                .setExpiration(Date.from(now.plus(1, ChronoUnit.MINUTES)))
                 .signWith(key)
                 .compact();
     }

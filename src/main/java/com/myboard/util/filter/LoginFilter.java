@@ -2,7 +2,7 @@ package com.myboard.util.filter;
 
 import com.myboard.exception.user.UserNotFoundException;
 import com.myboard.repository.user.UserRepository;
-import com.myboard.util.jwt.JwtTokenProvider;
+import com.myboard.util.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class LoginFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final HttpSession httpSession;
 
@@ -43,11 +43,11 @@ public class LoginFilter extends OncePerRequestFilter {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         response.setHeader(HttpHeaders.AUTHORIZATION, generateToken(authentication));
 
-//        Long userId = userRepository.findIdByUsername(String.valueOf(username))
-//                .orElseThrow(UserNotFoundException::new);
-//
-//        httpSession.setAttribute("USER_ID", userId);
-//        httpSession.setMaxInactiveInterval(600);
+        Long userId = userRepository.findIdByUsername(String.valueOf(username))
+                .orElseThrow(UserNotFoundException::new);
+
+        httpSession.setAttribute("USER_ID", userId);
+        httpSession.setMaxInactiveInterval(600);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LoginFilter extends OncePerRequestFilter {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        return jwtTokenProvider.generateToken(user.getUsername(), map_of("roles", stringRole));
+        return jwtProvider.generateToken(user.getUsername(), map_of("roles", stringRole));
     }
 
     private static Map<String, Object> map_of(String key, Object stringRole) {

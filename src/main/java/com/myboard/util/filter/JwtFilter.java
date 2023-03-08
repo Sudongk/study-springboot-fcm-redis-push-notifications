@@ -1,7 +1,6 @@
 package com.myboard.util.filter;
 
-import com.myboard.exception.token.TokenNotValidException;
-import com.myboard.util.jwt.JwtTokenProvider;
+import com.myboard.util.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         log.info("jwtFilter doFilterInternal : {}", jwtToken);
 
-        Map<String, Object> claims = jwtTokenProvider.parseClaims(jwtToken);
+        Map<String, Object> claims = jwtProvider.parseClaims(jwtToken);
 
         SecurityContextHolder.getContext().setAuthentication(createAuthentication(claims));
         filterChain.doFilter(request, response);
@@ -56,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
         return Optional.ofNullable(servletRequest.getHeader(HttpHeaders.AUTHORIZATION))
                 .filter(auth -> auth.startsWith("Bearer "))
                 .map(auth -> auth.replace("Bearer ", ""))
-                .orElseThrow(TokenNotValidException::new);
+                .orElseThrow(() -> new BadCredentialsException("자격 증명에 실패하였습니다."));
     }
 
     private Authentication createAuthentication(Map<String, Object> claims) {

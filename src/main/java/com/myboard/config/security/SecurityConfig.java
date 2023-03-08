@@ -2,6 +2,7 @@ package com.myboard.config.security;
 
 import com.myboard.util.filter.JwtFilter;
 import com.myboard.util.filter.LoginFilter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,22 +17,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
     private final LoginFilter loginFilter;
     private final JwtFilter jwtFilter;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(@Lazy LoginFilter loginFilter, JwtFilter jwtFilter) {
+    public SecurityConfig(@Lazy LoginFilter loginFilter, JwtFilter jwtFilter, @Qualifier("customAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint) {
         this.loginFilter = loginFilter;
         this.jwtFilter = jwtFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -92,16 +93,12 @@ public class SecurityConfig {
                 .authenticated();
         httpSecurity.addFilterAt(loginFilter, BasicAuthenticationFilter.class);
         httpSecurity.addFilterAt(jwtFilter, BasicAuthenticationFilter.class);
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        httpSecurity.exceptionHandling()
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().println(accessDeniedException.getMessage());
-                })
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().println(authException.getMessage());
-                });
+        httpSecurity
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        httpSecurity
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint);
 
         return httpSecurity.build();
     }
