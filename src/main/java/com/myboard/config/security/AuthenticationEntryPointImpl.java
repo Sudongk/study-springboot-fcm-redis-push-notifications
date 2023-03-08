@@ -15,6 +15,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
+    // GlobalControllerAdvice 처리를 위한 작업
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override

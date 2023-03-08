@@ -28,11 +28,16 @@ public class SecurityConfig {
     private final LoginFilter loginFilter;
     private final JwtFilter jwtFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(@Lazy LoginFilter loginFilter, JwtFilter jwtFilter, @Qualifier("customAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint) {
+    public SecurityConfig(@Lazy LoginFilter loginFilter,
+                          JwtFilter jwtFilter,
+                          @Qualifier("customAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint,
+                          @Qualifier("customUserDetailsService") UserDetailsService userDetailsService) {
         this.loginFilter = loginFilter;
         this.jwtFilter = jwtFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -75,7 +80,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+    public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(PasswordEncoder());

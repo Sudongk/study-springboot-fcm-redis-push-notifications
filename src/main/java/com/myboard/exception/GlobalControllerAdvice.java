@@ -70,7 +70,7 @@ public class GlobalControllerAdvice {
                 .body(ErrorResponse.of(errorType));
     }
 
-    // BadCredentialsException, SignatureException, ExpiredJwtException, TokenNotValidException
+    // BadCredentialsException, SignatureException, ExpiredJwtException
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handelAuthenticationException(AuthenticationException e) {
         log.info(String.format("handelAuthenticationException %s, %s", e.getMessage(), e.getClass()));

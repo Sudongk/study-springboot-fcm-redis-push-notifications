@@ -1,5 +1,6 @@
 package com.myboard.util.filter;
 
+import com.myboard.entity.User;
 import com.myboard.exception.user.UserNotFoundException;
 import com.myboard.repository.user.UserRepository;
 import com.myboard.util.jwt.JwtProvider;
@@ -11,7 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -60,14 +61,8 @@ public class LoginFilter extends OncePerRequestFilter {
     }
 
     private String generateToken(Authentication authentication) {
-        User user = (User)authentication.getPrincipal();
-
-        log.info("generateToken : {}", user.toString());
-
-        String stringRole = user.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining());
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        String stringRole = user.getAuthorities().stream().findAny().get().getAuthority();
 
         return jwtProvider.generateToken(user.getUsername(), map_of("roles", stringRole));
     }
