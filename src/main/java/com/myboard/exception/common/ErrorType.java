@@ -73,13 +73,13 @@ public enum ErrorType {
     // class 초기화 블럭
     static {
         Arrays.stream(values())
-                .filter(ErrorType -> ErrorType.isNotExternalException())
+                .filter(ErrorType::isNotExternalException)
                 .forEach(errorType -> CLASS_ERROR_TYPE_MAP.put(errorType.classType, errorType));
     }
 
     public static ErrorType of(Class<? extends MyboardException> classType) {
         if (classType.equals(ExternalException.class)) {
-            throw new UnsupportedOperationException("클래스로 ErrorType을 생성할 수 없는 예외입니다.");
+            throw new UnsupportedOperationException("해당 클래스로 타입으로 ErrorType을 생성불가합니다.");
         }
         return CLASS_ERROR_TYPE_MAP.getOrDefault(classType, ErrorType.X001);
     }
