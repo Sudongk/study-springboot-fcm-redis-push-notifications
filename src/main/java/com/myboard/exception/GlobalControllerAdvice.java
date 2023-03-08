@@ -6,6 +6,8 @@ import com.myboard.exception.http.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,4 +70,18 @@ public class GlobalControllerAdvice {
                 .body(ErrorResponse.of(errorType));
     }
 
+    // BadCredentialsException, SignatureException, ExpiredJwtException, TokenNotValidException
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handelAuthenticationException(AuthenticationException e) {
+        log.info(String.format("handelAuthenticationException %s, %s", e.getMessage(), e.getClass()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponse.of(null, e.getMessage()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handelAccessDeniedException(AccessDeniedException e) {
+        log.info(String.format("handelAccessDeniedException %s, %s", e.getMessage(), e.getClass()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(null, e.getMessage()));
+    }
 }

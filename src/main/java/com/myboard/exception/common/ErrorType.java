@@ -12,7 +12,6 @@ import com.myboard.exception.board.*;
 import com.myboard.exception.MyboardException;
 import com.myboard.exception.firebase.FcmInitException;
 import com.myboard.exception.search.*;
-import com.myboard.exception.token.TokenNotValidException;
 import com.myboard.exception.user.NotAuthorException;
 import com.myboard.exception.user.UserNameDuplicatedException;
 import com.myboard.exception.user.UserNotFoundException;
@@ -27,8 +26,6 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor
 public enum ErrorType {
-
-    T001("T001", "토큰이 유효하지 않습니다.", TokenNotValidException.class),
 
     U001("U001", "해당 유저를 찾을 수 없습니다.", UserNotFoundException.class),
     U002("U002", "이미 존재하는 회원 이름입니다.", UserNameDuplicatedException.class),
