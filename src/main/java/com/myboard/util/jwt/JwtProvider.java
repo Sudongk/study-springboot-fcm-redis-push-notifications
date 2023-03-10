@@ -29,7 +29,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(sub)
                 .addClaims(claims)
-                .setExpiration(Date.from(now.plus(1, ChronoUnit.MINUTES)))
+                .setExpiration(Date.from(now.plus(10, ChronoUnit.MINUTES)))
                 .signWith(key)
                 .compact();
     }

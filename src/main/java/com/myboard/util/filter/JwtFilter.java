@@ -4,6 +4,7 @@ import com.myboard.util.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,10 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        boolean whenLogin = request.getRequestURI().startsWith("/api/v1/login");
-        boolean whenSignUp = request.getRequestURI().startsWith("/api/v1/user/create");
-
-        return whenLogin || whenSignUp;
+        return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/login");
     }
 
     private String getJwtToken(HttpServletRequest servletRequest) {

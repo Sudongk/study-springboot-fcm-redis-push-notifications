@@ -1,6 +1,6 @@
 package com.myboard.controller.user;
 
-import com.myboard.aop.resolver.CurrentLoginUserId;
+import com.myboard.aop.resolver.LoginUserId;
 import com.myboard.aop.valid.CheckExist;
 import com.myboard.aop.valid.EntityType;
 import com.myboard.dto.requestDto.user.UserCreateRequestDto;
@@ -39,7 +39,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/user/delete/{userId}")
     public ResponseEntity<Long> userDelete(@CheckExist(type = EntityType.USER, message = "U001") @PathVariable Long userId,
-                                           @CurrentLoginUserId Long currentUserId) {
+                                           @LoginUserId Long currentUserId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.userDelete(userId, currentUserId));
     }

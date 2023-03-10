@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-@Component
 @Log4j2
-public class FirebaseTokenManger {
+@Component
+public class FirebaseTokenManager {
 
     @Value("${firebase.firebaseConfigPath}")
     private String firebaseConfigPath;

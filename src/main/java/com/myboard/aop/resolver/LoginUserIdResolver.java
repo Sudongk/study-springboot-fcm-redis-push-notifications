@@ -16,19 +16,21 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CurrentLoginUserIdResolver implements HandlerMethodArgumentResolver {
+public class LoginUserIdResolver implements HandlerMethodArgumentResolver {
 
     private final HttpSession httpSession;
 
+    public static final String USER_ID = "userId";
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(CurrentLoginUserId.class) != null &&
+        return parameter.getParameterAnnotation(LoginUserId.class) != null &&
                 Long.class.equals(parameter.getParameterType());
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Optional<Long> userId = Optional.ofNullable(httpSession.getAttribute("USER_ID"))
+        Optional<Long> userId = Optional.ofNullable(httpSession.getAttribute(USER_ID))
                 .map(id -> (Long) id);
 
         return userId.orElseThrow(UserNotFoundException::new);

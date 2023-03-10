@@ -1,14 +1,13 @@
 package com.myboard.controller.articleComment;
 
 import com.google.gson.Gson;
-import com.myboard.aop.resolver.CurrentLoginUserIdResolver;
+import com.myboard.aop.resolver.LoginUserIdResolver;
 import com.myboard.dto.requestDto.articleComment.CreateArticleCommentDto;
 import com.myboard.dto.requestDto.articleComment.UpdateArticleCommentDto;
 import com.myboard.exception.GlobalControllerAdvice;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.service.articleComment.ArticleCommentService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -50,7 +47,7 @@ class ArticleCommentControllerTest {
     private ArticleRepository articleRepository;
 
     @Mock
-    private CurrentLoginUserIdResolver currentLoginUserIdResolver;
+    private LoginUserIdResolver loginUserIdResolver;
 
     private MockMvc mockMvc;
 
@@ -67,17 +64,17 @@ class ArticleCommentControllerTest {
     @BeforeEach
     public void init() throws Exception {
         this.mockMvc = MockMvcBuilders.standaloneSetup(articleCommentController)
-                .setCustomArgumentResolvers(currentLoginUserIdResolver)
+                .setCustomArgumentResolvers(loginUserIdResolver)
                 .setControllerAdvice(new GlobalControllerAdvice())
                 .build();
     }
 
     private void initCurrentLoginUserIdResolverReturnUserId() throws Exception {
         // init CurrentUserLoginResolver
-        given(currentLoginUserIdResolver.supportsParameter(any()))
+        given(loginUserIdResolver.supportsParameter(any()))
                 .willReturn(true);
 
-        given(currentLoginUserIdResolver.resolveArgument(any(), any(), any(), any()))
+        given(loginUserIdResolver.resolveArgument(any(), any(), any(), any()))
                 .willReturn(USER_ID);
     }
 

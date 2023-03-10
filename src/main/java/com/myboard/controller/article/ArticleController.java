@@ -1,6 +1,6 @@
 package com.myboard.controller.article;
 
-import com.myboard.aop.resolver.CurrentLoginUserId;
+import com.myboard.aop.resolver.LoginUserId;
 import com.myboard.aop.valid.CheckExist;
 import com.myboard.aop.valid.EntityType;
 import com.myboard.dto.requestDto.article.CreateArticleDto;
@@ -33,7 +33,7 @@ public class ArticleController {
     @PostMapping("/article/create/{boardId}")
     public ResponseEntity<Long> createArticle(@Valid @RequestBody CreateArticleDto createArticleDto,
                                               @CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
-                                              @CurrentLoginUserId Long userId) {
+                                              @LoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(articleService.createArticle(createArticleDto, boardId, userId));
     }
@@ -45,7 +45,7 @@ public class ArticleController {
     @PutMapping("/article/{articleId}/update")
     public ResponseEntity<Long> updateArticle(@Valid @RequestBody UpdateArticleDto updateArticleDto,
                                               @CheckExist(type = EntityType.ARTICLE, message = "A005") @PathVariable("articleId") Long articleId,
-                                              @CurrentLoginUserId Long userId) {
+                                              @LoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleService.updateArticle(updateArticleDto, articleId, userId));
     }
@@ -56,7 +56,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/article/{articleId}/delete")
     public ResponseEntity<Long> deleteArticle(@CheckExist(type = EntityType.ARTICLE, message = "A005") @PathVariable("articleId") Long articleId,
-                                              @CurrentLoginUserId Long userId) {
+                                              @LoginUserId Long userId) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleService.deleteArticle(articleId, userId));
