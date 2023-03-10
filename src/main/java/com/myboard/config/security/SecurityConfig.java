@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
@@ -29,15 +30,19 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsService userDetailsService;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     public SecurityConfig(@Lazy LoginFilter loginFilter,
                           JwtFilter jwtFilter,
                           @Qualifier("customAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint,
-                          @Qualifier("customUserDetailsService") UserDetailsService userDetailsService) {
+                          @Qualifier("customUserDetailsService") UserDetailsService userDetailsService,
+                          @Qualifier("customAuthenticationSuccessHandler") AuthenticationSuccessHandler authenticationSuccessHandler) {
+
         this.loginFilter = loginFilter;
         this.jwtFilter = jwtFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.userDetailsService = userDetailsService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
@@ -92,7 +97,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf -> csrf.disable());
         httpSecurity.authorizeRequests()
-                .antMatchers("/api/v1/user/create")
+                .antMatchers("/api/v1/user/create", "/api/v1/login")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

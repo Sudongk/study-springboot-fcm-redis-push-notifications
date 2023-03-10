@@ -1,6 +1,5 @@
 package com.myboard.config.security;
 
-import com.myboard.entity.User;
 import com.myboard.exception.user.UserNotFoundException;
 import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;

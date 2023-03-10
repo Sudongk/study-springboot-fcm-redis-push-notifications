@@ -1,7 +1,7 @@
 package com.myboard.controller.board;
 
 import com.google.gson.Gson;
-import com.myboard.aop.resolver.CurrentLoginUserIdResolver;
+import com.myboard.aop.resolver.LoginUserIdResolver;
 import com.myboard.dto.requestDto.board.CreateBoardDto;
 import com.myboard.dto.requestDto.board.UpdateBoardDto;
 import com.myboard.dto.responseDto.article.ArticleResponseDto;
@@ -53,24 +53,24 @@ public class BoardControllerTest {
     private BoardService boardService;
 
     @Mock
-    private CurrentLoginUserIdResolver currentLoginUserIdResolver;
+    private LoginUserIdResolver loginUserIdResolver;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     public void init() throws Exception {
         this.mockMvc = MockMvcBuilders.standaloneSetup(boardController)
-                .setCustomArgumentResolvers(currentLoginUserIdResolver)
+                .setCustomArgumentResolvers(loginUserIdResolver)
                 .setControllerAdvice(new GlobalControllerAdvice())
                 .build();
     }
 
     private void initCurrentLoginUserIdResolverReturnUserId() throws Exception {
         // init CurrentUserLoginResolver
-        given(currentLoginUserIdResolver.supportsParameter(any()))
+        given(loginUserIdResolver.supportsParameter(any()))
                 .willReturn(true);
 
-        given(currentLoginUserIdResolver.resolveArgument(any(), any(), any(), any()))
+        given(loginUserIdResolver.resolveArgument(any(), any(), any(), any()))
                 .willReturn(USER_ID);
     }
 

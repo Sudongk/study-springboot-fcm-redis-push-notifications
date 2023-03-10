@@ -1,6 +1,6 @@
 package com.myboard.controller.board;
 
-import com.myboard.aop.resolver.CurrentLoginUserId;
+import com.myboard.aop.resolver.LoginUserId;
 import com.myboard.aop.valid.CheckExist;
 import com.myboard.aop.valid.EntityType;
 import com.myboard.dto.requestDto.board.CreateBoardDto;
@@ -43,7 +43,7 @@ public class BoardController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/board/create")
     public ResponseEntity<Long> createBoard(@Valid @RequestBody CreateBoardDto createBoardDto,
-                                            @CurrentLoginUserId Long userId) {
+                                            @LoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(boardService.createBoard(createBoardDto, userId));
     }
@@ -55,7 +55,7 @@ public class BoardController {
     @PutMapping("/board/{boardId}/update")
     public ResponseEntity<Long> updateBoard(@Valid @RequestBody UpdateBoardDto updateBoardDto,
                                             @CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
-                                            @CurrentLoginUserId Long userId) {
+                                            @LoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.updateBoard(updateBoardDto, boardId, userId));
     }
@@ -66,7 +66,7 @@ public class BoardController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/board/{boardId}/delete")
     public ResponseEntity<Long> deleteBoard(@CheckExist(type = EntityType.BOARD, message = "B003") @PathVariable("boardId") Long boardId,
-                                            @CurrentLoginUserId Long userId) {
+                                            @LoginUserId Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.deleteBoard(boardId, userId));
     }

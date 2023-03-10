@@ -1,6 +1,6 @@
 package com.myboard.controller;
 
-import com.myboard.aop.resolver.CurrentLoginUserId;
+import com.myboard.aop.resolver.LoginUserId;
 import com.myboard.aop.resolver.SearchParams;
 import com.myboard.aop.valid.CheckExist;
 import com.myboard.aop.valid.EntityType;
@@ -45,7 +45,7 @@ public class CustomAnnotationTestController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/currentLoginUserIdAnnotationTest")
-    public Long currentLoginUserIdAnnotation(@CurrentLoginUserId Long userId) {
+    public Long currentLoginUserIdAnnotation(@LoginUserId Long userId) {
         return userId;
     }
 
