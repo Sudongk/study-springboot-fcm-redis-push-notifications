@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 @Component("customLogoutHandler")
 public class LogoutHandlerImpl implements LogoutHandler {
 
-
-
     // session에서 userId 삭제, redis에서 토근 삭제
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
