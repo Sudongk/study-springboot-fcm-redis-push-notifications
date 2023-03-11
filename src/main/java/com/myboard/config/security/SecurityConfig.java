@@ -96,7 +96,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf -> csrf.disable());
-        httpSecurity.authorizeRequests()
+        httpSecurity
+                .authorizeRequests()
                 .antMatchers("/api/v1/user/create", "/api/v1/login")
                 .permitAll()
                 .anyRequest()
@@ -109,6 +110,10 @@ public class SecurityConfig {
         httpSecurity
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
+
+        httpSecurity
+                .formLogin()
+                .successHandler(authenticationSuccessHandler);
 
         return httpSecurity.build();
     }
