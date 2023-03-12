@@ -9,12 +9,12 @@ plugins {
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-
+    id "io.franzbecker.gradle-lombok" version "3.0.0"
 }
 
 group = 'com'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "11"
+sourceCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -82,4 +82,3 @@ configurations {
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
-targetCompatibility = JavaVersion.VERSION_1_9

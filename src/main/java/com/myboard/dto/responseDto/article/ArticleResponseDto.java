@@ -1,7 +1,6 @@
 package com.myboard.dto.responseDto.article;
 
 import com.myboard.dto.responseDto.articleComment.ArticleCommentResponseDto;
-import com.myboard.entity.Article;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;

@@ -4,7 +4,7 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         highlight_sql: true
@@ -18,7 +18,6 @@ spring:
     url: jdbc:mysql://localhost:3306/boardapi_db?characterEncoding=UTF-8&serverTimezone=UTC&rewriteBatchedStatements=true
     username: root
     password: rlatnehd@123
-    driver-class-name: com.mysql.jdbc.Driver
 
   redis:
     host: localhost
