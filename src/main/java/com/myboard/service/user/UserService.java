@@ -1,6 +1,7 @@
 package com.myboard.service.user;
 
 import com.myboard.dto.requestDto.user.UserCreateRequestDto;
+import com.myboard.dto.requestDto.user.UserLoginRequestDto;
 import com.myboard.dto.responseDto.user.UserResponseDto;
 
 public interface UserService {
@@ -8,4 +9,5 @@ public interface UserService {
 
     Long userDelete(Long userId, Long currentUserId);
 
+    UserResponseDto authenticate(UserLoginRequestDto userLoginRequestDto);
 }

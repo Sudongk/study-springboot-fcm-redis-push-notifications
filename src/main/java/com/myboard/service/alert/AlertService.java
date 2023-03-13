@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
-import com.myboard.config.firebase.FirebaseTokenManager;
+import com.myboard.firebase.FirebaseTokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

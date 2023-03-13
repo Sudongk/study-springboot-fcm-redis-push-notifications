@@ -2,9 +2,11 @@ package com.myboard.config.security;
 
 import com.myboard.exception.user.UserNotFoundException;
 import com.myboard.repository.user.UserRepository;
+import com.myboard.util.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,20 +28,30 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
-    private final LogoutHandler logoutHandler;
+    private final JwtFilter jwtFilter;
+    private final LogoutHandlerImpl logoutHandler;
     private final UserRepository userRepository;
+    private final AuthenticationEntryPointImpl authenticationEntryPoint;
+
+    public SecurityConfig(JwtFilter jwtFilter,
+                          LogoutHandlerImpl logoutHandler,
+                          UserRepository userRepository,
+                          AuthenticationEntryPointImpl authenticationEntryPoint) {
+
+        this.jwtFilter = jwtFilter;
+        this.logoutHandler = logoutHandler;
+        this.userRepository = userRepository;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests()
-                .antMatchers("/api/v1/user/create", "/api/v1/login")
+                .antMatchers("/api/v1/user/create", "/api/v1/user/login")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
@@ -49,12 +61,16 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint);
 
         httpSecurity
                 .logout()
-                .logoutUrl("/api/v1/logout")
+                .logoutUrl("/api/v1/user/logout")
                 .addLogoutHandler(logoutHandler)
                 // 로그아웃시 로그인 정보 초기화
                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());

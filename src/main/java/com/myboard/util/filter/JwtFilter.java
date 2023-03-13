@@ -1,16 +1,16 @@
 package com.myboard.util.filter;
 
+import com.myboard.jwt.JwtTokenManager;
 import com.myboard.util.jwt.JwtProvider;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,45 +19,63 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenManager jwtTokenManager;
+
+    public JwtFilter(JwtProvider jwtProvider,
+                     @Lazy UserDetailsService userDetailsService,
+                     JwtTokenManager jwtTokenManager) {
+        this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenManager = jwtTokenManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwtToken = getJwtToken(request);
+        String token = jwtProvider.getJwtFromRequest(request);
+        String username = jwtProvider.extractUsername(token);
 
-        log.info("jwtFilter doFilterInternal : {}", jwtToken);
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        Map<String, Object> claims = jwtProvider.parseClaims(jwtToken);
+            if (jwtProvider.isTokenValid(token, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(createAuthentication(claims));
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/login");
+        return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/user/login");
     }
 
-    private String getJwtToken(HttpServletRequest servletRequest) {
-        return Optional.ofNullable(servletRequest.getHeader(HttpHeaders.AUTHORIZATION))
-                .filter(auth -> auth.startsWith("Bearer "))
-                .map(auth -> auth.replace("Bearer ", ""))
-                .orElseThrow(() -> new BadCredentialsException("자격 증명에 실패하였습니다."));
-    }
-
-    private Authentication createAuthentication(Map<String, Object> claims) {
-        List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        return new UsernamePasswordAuthenticationToken(claims.get(Claims.SUBJECT), null, roles);
-    }
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//        String jwtToken = getJwtToken(request);
+//
+//        log.info("jwtFilter doFilterInternal : {}", jwtToken);
+//
+//        Map<String, Object> claims = jwtProvider.parseClaims(jwtToken);
+//
+//        SecurityContextHolder.getContext().setAuthentication(createAuthentication(claims));
+//        filterChain.doFilter(request, response);
+//    }
+//
+//    private Authentication createAuthentication(Map<String, Object> claims) {
+//        List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(","))
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//
+//        return new UsernamePasswordAuthenticationToken(claims.get(Claims.SUBJECT), null, roles);
+//    }
 }
