@@ -4,6 +4,8 @@ import com.myboard.aop.resolver.LoginUserId;
 import com.myboard.aop.valid.CheckExist;
 import com.myboard.aop.valid.EntityType;
 import com.myboard.dto.requestDto.user.UserCreateRequestDto;
+import com.myboard.dto.requestDto.user.UserLoginRequestDto;
+import com.myboard.dto.responseDto.user.UserResponseDto;
 import com.myboard.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,13 @@ public class UserController {
                 .body(userService.userDelete(userId, currentUserId));
     }
 
-
+    /**
+     * 로그인
+     */
+    @PostMapping("/user/login")
+    public ResponseEntity<UserResponseDto> userLogin(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.authenticate(userLoginRequestDto));
+    }
 }
 
