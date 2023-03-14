@@ -8,7 +8,7 @@
 - 추후 다른 스킬스택 학습을 위해 새로운 서비스 추가
 
 ## 📈 기술 스택
-- JAVA 8<br>
+- JAVA 11<br>
 - Spring Boot<br>
 - MySQL<br>
 - redis<br>
