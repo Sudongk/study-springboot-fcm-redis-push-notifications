@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final JwtTokenManager jwtTokenManager;
+    private final HttpSession httpSession;
 
     @Override
     @Transactional
@@ -85,6 +87,8 @@ public class UserServiceImpl implements UserService {
 
         // Redis에 사용자 이름을 Key로 지정하여 토근값 저장
         jwtTokenManager.saveToken(user.getUsername(), token);
+
+        httpSession.setAttribute("USER_ID", user.getId());
 
         return UserResponseDto.builder()
                 .userId(user.getId())
