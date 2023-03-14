@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,14 +67,14 @@ public class UserServiceImpl implements UserService {
         final String password = userLoginRequestDto.getPassword();
 
         // 인증
-        authenticationManager.authenticate(
+        Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         username,
                         password
                 )
         );
 
-        User user = getUserByUsername(username);
+        User user = (User) authenticate.getPrincipal();
         String token = jwtProvider.generateToken(user);
 
         // 기존에 존재하는 토큰 삭제
@@ -109,5 +111,4 @@ public class UserServiceImpl implements UserService {
             throw new SelfConfirmationException();
         }
     }
-
 }

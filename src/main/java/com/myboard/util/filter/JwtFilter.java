@@ -43,8 +43,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            Boolean isExistToken = jwtTokenManager.isExistToken(userDetails.getUsername());
 
-            if (jwtProvider.isTokenValid(token, userDetails)) {
+            if (jwtProvider.isTokenValid(token, userDetails) && isExistToken) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
@@ -59,18 +60,6 @@ public class JwtFilter extends OncePerRequestFilter {
         return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/user/login");
     }
 
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        String jwtToken = getJwtToken(request);
-//
-//        log.info("jwtFilter doFilterInternal : {}", jwtToken);
-//
-//        Map<String, Object> claims = jwtProvider.parseClaims(jwtToken);
-//
-//        SecurityContextHolder.getContext().setAuthentication(createAuthentication(claims));
-//        filterChain.doFilter(request, response);
-//    }
-//
 //    private Authentication createAuthentication(Map<String, Object> claims) {
 //        List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(","))
 //                .map(SimpleGrantedAuthority::new)
