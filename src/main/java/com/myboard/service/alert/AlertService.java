@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
-import com.myboard.firebase.FirebaseTokenManager;
+import com.myboard.firebase.fcm.FcmTokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class AlertService {
 
-    private final FirebaseTokenManager firebaseTokenManager;
+    private final FcmTokenManager FCMTokenManager;
 
     // 토근값으로 특정 사용자에게 알림 전송
     public void sendMessage(String token, String title, String contents) {

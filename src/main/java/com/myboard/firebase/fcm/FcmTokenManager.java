@@ -1,4 +1,4 @@
-package com.myboard.firebase;
+package com.myboard.firebase.fcm;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,10 +6,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 @Log4j2
 @Component
-public class FirebaseTokenManager {
+public class FcmTokenManager {
 
     @Value("${firebase.firebaseConfigPath}")
     private String firebaseConfigPath;
@@ -24,8 +25,8 @@ public class FirebaseTokenManager {
     }
 
     // userId를 이용해 사용자 토근 조회
-    public String getToken(Long userId) {
-        return (String) redisTemplate.opsForValue().get(userId);
+    public Optional<String> getToken(Long userId) {
+        return Optional.ofNullable((String) redisTemplate.opsForValue().get(userId));
     }
 
     // userId를 이용해 사용자 토근 삭제
