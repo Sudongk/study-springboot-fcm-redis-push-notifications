@@ -25,7 +25,7 @@ public class FcmService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
-    public void sendMessage(String token, String title, String contents) {
+    private void sendMessage(String token, String title, String contents) {
         // setToken 혹은 setTopic을 이용해 메세지의 타겟을 결정
         Message message = Message.builder()
                 .setToken(token)
@@ -44,8 +44,6 @@ public class FcmService {
         }
     }
 
-    // 새로운 댓글이 있어요
-    // ..님의 ... 게시글에 ..님이 댓글을 남겼습니다
     // 게시글에 댓글이 달리면 알림 전송
     @Async
     public void commentNotification(Long articleId, Long commentAuthorId) {
@@ -65,6 +63,5 @@ public class FcmService {
                     targetUsername + "님의" + targetArticleTitle + "게시글에" + commentAuthorName + "님이 댓글을 남겼습니다.")
             );
         }
-
     }
 }
