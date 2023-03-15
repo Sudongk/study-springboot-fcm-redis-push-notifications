@@ -4,6 +4,7 @@ import com.myboard.config.TestQuerydslConfig;
 import com.myboard.entity.*;
 import com.myboard.repository.board.BoardRepository;
 import com.myboard.repository.user.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -320,6 +322,26 @@ class ArticleRepositoryTest {
         assertThat(updatedArticle).isPresent();
         assertThat(updatedArticle.get().getViewCount())
                 .isEqualTo(viewCount + 1);
+    }
+
+    @Test
+    @DisplayName("패치조인으로 게시글 조회")
+    void findArticleByIdFetchJoin() {
+        // given
+        Article article = getArticle();
+
+        Article savedArticle = articleRepository.save(article);
+        Long articleId = savedArticle.getId();
+
+        testEntityManager.clear();
+
+        // when
+        Optional<Article> findArticle = articleRepository.findArticleByIdFetchJoin(articleId);
+
+        // then
+        assertThat(findArticle).isPresent();
+        assertThat(findArticle.get().getUser()).isNotNull();
+        assertThat(findArticle.get().getUser().getId()).isNotNull();
     }
 }
 

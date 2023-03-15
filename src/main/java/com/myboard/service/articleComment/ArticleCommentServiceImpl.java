@@ -6,13 +6,16 @@ import com.myboard.entity.Article;
 import com.myboard.entity.ArticleComment;
 import com.myboard.entity.User;
 import com.myboard.exception.user.NotAuthorException;
+import com.myboard.firebase.fcm.FcmService;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ArticleCommentServiceImpl implements ArticleCommentService{
@@ -20,6 +23,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService{
     private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
+    private final FcmService fcmService;
 
     @Override
     @Transactional
@@ -35,6 +39,11 @@ public class ArticleCommentServiceImpl implements ArticleCommentService{
 
         ArticleComment savedArticleComment = articleCommentRepository.save(articleComment);
 
+        log.info("Fcm start");
+        fcmService.commentNotification(articleId, userId);
+        log.info("Fcm finish");
+
+        log.info("return ArticleCommentId");
         return savedArticleComment.getId();
     }
 
