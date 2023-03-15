@@ -30,5 +30,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
     @Query("UPDATE Article a SET a.viewCount = a.viewCount + 1 WHERE a.id = :articleId")
     void increaseViewCount(@Param("articleId") Long articleId);
 
+    @Query("SELECT a FROM Article a JOIN FETCH a.user WHERE a.id = :articleId")
+    Optional<Article> findArticleByIdFetchJoin(@Param("articleId") Long articleId);
 }
 

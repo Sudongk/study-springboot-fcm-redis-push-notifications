@@ -11,6 +11,7 @@ import com.myboard.exception.articleComment.CommentNotFoundException;
 import com.myboard.exception.board.*;
 import com.myboard.exception.MyboardException;
 import com.myboard.exception.firebase.FcmInitException;
+import com.myboard.exception.firebase.FcmMessagingException;
 import com.myboard.exception.search.*;
 import com.myboard.exception.user.NotAuthorException;
 import com.myboard.exception.user.UserNameDuplicatedException;
@@ -59,7 +60,9 @@ public enum ErrorType {
     S005("S005", "검색어는 30자 이하여야 합니다.", LongSearchKeywordException.class),
     S006("S006", "검색어는 1자 이상이어야 합니다.", ShortSearchKeywordException.class),
 
-    FCM("FCM", "FCM 서버를 초기화시키지 못했습니다.", FcmInitException.class),
+    FCM1("FCM", "FCM 서버를 초기화시키지 못했습니다.", FcmInitException.class),
+    FCM2("FCM", "알림 전송에 실패하였습니다.", FcmMessagingException.class),
+
 
     X001("X001", "정의되지 않은 에러", UndefinedException.class),
     ;
