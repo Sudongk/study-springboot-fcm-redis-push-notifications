@@ -16,21 +16,21 @@ public class FcmTokenManager {
     private String firebaseConfigPath;
 
     @Resource
-    private RedisTemplate<Object, Object> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     // 레디스에 토근 저장
     // 토큰을 userId와 함께 세션과 함께 저장하기에는 토큰의 주기가 다르기때문에 별도로 저장
-    public void saveToken(Long userId, String token) {
+    public void saveToken(String userId, String token) {
         redisTemplate.opsForValue().set(userId, token);
     }
 
     // userId를 이용해 사용자 토근 조회
-    public Optional<String> getToken(Long userId) {
-        return Optional.ofNullable((String) redisTemplate.opsForValue().get(userId));
+    public String getToken(String userId) {
+        return redisTemplate.opsForValue().get(userId);
     }
 
     // userId를 이용해 사용자 토근 삭제
-    public void removeToken(Long userId) {
+    public void removeToken(String userId) {
         redisTemplate.delete(userId);
     }
 }

@@ -34,6 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// @ExtendWith(SpringExtension.class) : involve Spring
+// @ExtendWith(MockitoExtension.class) : not involving Spring
 @DisplayName("게시글 컨트롤러 단위 테스트")
 @ExtendWith(MockitoExtension.class)
 public class ArticleControllerTest {

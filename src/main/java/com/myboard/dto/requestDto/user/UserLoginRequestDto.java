@@ -20,9 +20,18 @@ public class UserLoginRequestDto {
     @Length(min = 8, max = 30, message = "U008")
     private String password;
 
+    private String fcmToken;
+
     @Builder
     public UserLoginRequestDto(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    @Builder
+    public UserLoginRequestDto(String username, String password, String fcmToken) {
+        this.username = username;
+        this.password = password;
+        this.fcmToken = fcmToken;
     }
 }

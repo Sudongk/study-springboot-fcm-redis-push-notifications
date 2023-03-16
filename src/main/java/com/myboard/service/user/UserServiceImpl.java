@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
         User user = (User) authenticate.getPrincipal();
         String token = jwtProvider.generateToken(user);
 
-        // 기존에 존재하는 토큰 삭제
+        // 기존에 존재하는 Jwt 삭제
         Optional.ofNullable(jwtTokenManager.getToken(username))
                 .ifPresent(
                         e -> jwtTokenManager.removeToken(username)
