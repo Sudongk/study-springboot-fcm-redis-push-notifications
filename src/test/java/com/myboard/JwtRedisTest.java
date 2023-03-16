@@ -38,6 +38,7 @@ public class JwtRedisTest {
             assertThat(token).isNotNull();
         }
 
+
         @DisplayName("jwt 토큰 조회")
         @Test
         void read() {
@@ -47,6 +48,15 @@ public class JwtRedisTest {
 
             assertThat(token).isNotNull();
             assertThat(token).isEqualTo(TOKEN);
+        }
+
+        @DisplayName("없는 jwt 토큰 조회시 null 반환")
+        @Test
+        void readWhenNotExist() {
+            String token = jwtTokenManager.getToken("NOTEXIST");
+
+            assertThat(token).isNull();
+            assertThat(token).isEqualTo(null);
         }
 
         @DisplayName("jwt 토큰 삭제")

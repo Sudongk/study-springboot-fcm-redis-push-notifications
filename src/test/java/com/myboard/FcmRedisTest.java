@@ -51,6 +51,15 @@ public class FcmRedisTest {
             assertThat(token).isEqualTo(TOKEN);
         }
 
+        @DisplayName("없는 fcm 토큰 조회시 null 반환")
+        @Test
+        void readWhenNotExist() {
+            String token = fcmTokenManager.getToken("NOTEXIST");
+
+            assertThat(token).isNull();
+            assertThat(token).isEqualTo(null);
+        }
+
         @DisplayName("fcm 토큰 삭제")
         @Test
         void delete() {
