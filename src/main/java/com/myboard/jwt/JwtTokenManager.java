@@ -15,7 +15,7 @@ public class JwtTokenManager {
     private String firebaseConfigPath;
 
     @Resource
-    private RedisTemplate<Object, Object> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     public void saveToken(String username, String token) {
         log.info("JwtTokenManager saveToken");
@@ -24,7 +24,7 @@ public class JwtTokenManager {
 
     public String getToken(String username) {
         log.info("JwtTokenManager getToken");
-        return (String) redisTemplate.opsForValue().get(username);
+        return redisTemplate.opsForValue().get(username);
     }
 
     public void removeToken(String username) {

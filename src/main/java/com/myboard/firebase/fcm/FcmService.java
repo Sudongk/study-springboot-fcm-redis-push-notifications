@@ -55,9 +55,9 @@ public class FcmService {
             String targetArticleTitle = targetArticle.get().getTitle();
             String targetUsername = targetArticle.get().getUser().getUsername();
             String commentAuthorName = commentAuthor.get().getUsername();
-            Optional<String> targetUserToken = fcmTokenManager.getToken(targetUserId);
+            String targetUserToken = fcmTokenManager.getToken(String.valueOf(targetUserId));
 
-            targetUserToken.ifPresent(token -> sendMessage(
+            Optional.ofNullable(targetUserToken).ifPresent(token -> sendMessage(
                     token,
                     "새로운 댓글이 있습니다",
                     targetUsername + "님의" + targetArticleTitle + "게시글에" + commentAuthorName + "님이 댓글을 남겼습니다.")
