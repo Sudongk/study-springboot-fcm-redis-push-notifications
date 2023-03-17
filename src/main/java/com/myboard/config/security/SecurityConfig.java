@@ -4,6 +4,7 @@ import com.myboard.exception.user.UserNotFoundException;
 import com.myboard.repository.user.UserRepository;
 import com.myboard.util.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,7 +51,7 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests()
-                .antMatchers("/api/v1/user/create", "/api/v1/user/login")
+                .antMatchers("/api/v1/user/create", "/api/v1/user/login", "/api/v1/fcm", "/resources/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

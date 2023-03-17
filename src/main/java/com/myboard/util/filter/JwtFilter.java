@@ -38,6 +38,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("JwtFilter start");
+
         String token = jwtProvider.getJwtFromRequest(request);
         String username = jwtProvider.extractUsername(token);
 
@@ -52,19 +54,12 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
+        log.info("JwtFilter end");
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/user/login");
+        return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/user/login", "/api/v1/fcm");
     }
-
-//    private Authentication createAuthentication(Map<String, Object> claims) {
-//        List<SimpleGrantedAuthority> roles = Arrays.stream(claims.get("roles").toString().split(","))
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());
-//
-//        return new UsernamePasswordAuthenticationToken(claims.get(Claims.SUBJECT), null, roles);
-//    }
 }
