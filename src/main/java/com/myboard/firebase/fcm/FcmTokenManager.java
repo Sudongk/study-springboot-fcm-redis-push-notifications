@@ -18,8 +18,16 @@ public class FcmTokenManager {
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
+    /*
+        RedisTemplate 사용 타입
+        opsForValue()	ValueOperations	Strings를 쉽게 Serialize / Deserialize 해주는 Interface
+        opsForList()	ListOperations	List를 쉽게 Serialize / Deserialize 해주는 Interface
+        opsForSet()	    SetOperations Set를 쉽게 Serialize / Deserialize 해주는 Interface
+        opsForZSet()	ZSetOperations	ZSet를 쉽게 Serialize / Deserialize 해주는 Interface
+        opsForHash()	HashOperations	Hash를 쉽게 Serialize / Deserialize 해주는 Interface
+    */
+
     // 레디스에 토근 저장
-    // 토큰을 userId와 함께 세션과 함께 저장하기에는 토큰의 주기가 다르기때문에 별도로 저장
     public void saveToken(String userId, String token) {
         redisTemplate.opsForValue().set(userId, token);
     }

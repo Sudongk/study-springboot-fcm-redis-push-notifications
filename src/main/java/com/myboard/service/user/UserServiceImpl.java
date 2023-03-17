@@ -7,6 +7,7 @@ import com.myboard.entity.User;
 import com.myboard.exception.user.SelfConfirmationException;
 import com.myboard.exception.user.UserNameDuplicatedException;
 import com.myboard.exception.user.UserNotFoundException;
+import com.myboard.firebase.fcm.FcmTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.repository.user.UserRepository;
 import com.myboard.util.jwt.JwtProvider;
@@ -15,12 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final JwtTokenManager jwtTokenManager;
-    private final HttpSession httpSession;
+    private final FcmTokenManager fcmTokenManager;
 
     @Override
     @Transactional
@@ -59,6 +58,7 @@ public class UserServiceImpl implements UserService {
     public Long userDelete(Long userId, Long currentUserId) {
         isUserIdOwnedByCurrentUser(userId, currentUserId);
         userRepository.deleteById(userId);
+
         return userId;
     }
 
@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto authenticate(UserLoginRequestDto userLoginRequestDto) {
         final String username = userLoginRequestDto.getUsername();
         final String password = userLoginRequestDto.getPassword();
+        final String fcmToken = userLoginRequestDto.getFcmToken();
 
         // 인증
         Authentication authenticate = authenticationManager.authenticate(
@@ -76,24 +77,25 @@ public class UserServiceImpl implements UserService {
                 )
         );
 
-        User user = (User) authenticate.getPrincipal();
-        String token = jwtProvider.generateToken(user);
+        User authenticatedUser = (User) authenticate.getPrincipal();
+        String jwtToken = jwtProvider.generateToken(authenticatedUser);
+        Long authenticatedUserId = authenticatedUser.getId();
+        String authenticatedUsername = authenticatedUser.getUsername();
 
-        // 기존에 존재하는 Jwt 삭제
-        Optional.ofNullable(jwtTokenManager.getToken(username))
-                .ifPresent(
-                        e -> jwtTokenManager.removeToken(username)
-                );
-
+        // 기존에 존재하는 jwt 삭제
+        jwtTokenManager.removeToken(authenticatedUsername);
         // Redis에 사용자 이름을 Key로 지정하여 토근값 저장
-        jwtTokenManager.saveToken(user.getUsername(), token);
+        jwtTokenManager.saveToken(authenticatedUsername, jwtToken);
 
-        httpSession.setAttribute("USER_ID", user.getId());
+        // 기존에 존재하는 Fcm 토큰 삭제
+        fcmTokenManager.removeToken(String.valueOf(authenticatedUserId));
+        // Redis에 사용자 아이디를 Key로 Fcm 토큰 저장
+        fcmTokenManager.saveToken(String.valueOf(authenticatedUserId), fcmToken);
 
         return UserResponseDto.builder()
-                .userId(user.getId())
-                .username(user.getUsername())
-                .token(token)
+                .userId(authenticatedUserId)
+                .username(authenticatedUsername)
+                .token(jwtToken)
                 .build();
     }
 
