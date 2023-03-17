@@ -11,7 +11,7 @@
 - JAVA 11<br>
 - Spring Boot<br>
 - MySQL<br>
-- redis<br>
+- Redis<br>
 - Spring Data Jpa<br>
 - Querydsl<br>
 - JUnit5<br>
