@@ -7,7 +7,7 @@ import com.myboard.entity.User;
 import com.myboard.exception.user.SelfConfirmationException;
 import com.myboard.exception.user.UserNameDuplicatedException;
 import com.myboard.exception.user.UserNotFoundException;
-import com.myboard.firebase.fcm.FcmTokenManager;
+import com.myboard.firebase.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.repository.user.UserRepository;
 import com.myboard.util.jwt.JwtProvider;
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final JwtTokenManager jwtTokenManager;
-    private final FcmTokenManager fcmTokenManager;
+    private final FCMTokenManager fcmTokenManager;
 
     @Override
     @Transactional

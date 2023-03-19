@@ -6,11 +6,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 @Log4j2
 @Component
-public class FcmTokenManager {
+public class FCMTokenManager {
 
     @Value("${firebase.firebaseConfigPath}")
     private String firebaseConfigPath;
