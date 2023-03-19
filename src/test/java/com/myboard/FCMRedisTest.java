@@ -1,6 +1,6 @@
 package com.myboard;
 
-import com.myboard.firebase.fcm.FcmTokenManager;
+import com.myboard.firebase.fcm.FCMTokenManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,10 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class FcmRedisTest {
+public class FCMRedisTest {
 
     @Autowired
-    private FcmTokenManager fcmTokenManager;
+    private FCMTokenManager fcmTokenManager;
 
     private static final Long USER_ID = 1L;
     private static final String USER_NAME = "USERNAME";

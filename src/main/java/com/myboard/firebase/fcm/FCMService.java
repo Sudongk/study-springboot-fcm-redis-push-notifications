@@ -19,9 +19,9 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FcmService {
+public class FCMService {
 
-    private final FcmTokenManager fcmTokenManager;
+    private final FCMTokenManager fcmTokenManager;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 

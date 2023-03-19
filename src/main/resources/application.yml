@@ -28,7 +28,6 @@ spring:
     host: localhost
     port: 6379
 
-
 #rsa:
 #  private-key: classpath:certs/private.pem
 #  public-key: classpath:certs/public.pem

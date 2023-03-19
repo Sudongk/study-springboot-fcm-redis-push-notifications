@@ -1,6 +1,6 @@
 package com.myboard.config.security;
 
-import com.myboard.firebase.fcm.FcmTokenManager;
+import com.myboard.firebase.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.util.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class LogoutHandlerImpl implements LogoutHandler {
 
     private final JwtProvider jwtProvider;
     private final JwtTokenManager jwtTokenManager;
-    private final FcmTokenManager fcmTokenManager;
+    private final FCMTokenManager fcmTokenManager;
 
     // 로그아웃시 jwt, fcm 토큰 삭제
     @Override
