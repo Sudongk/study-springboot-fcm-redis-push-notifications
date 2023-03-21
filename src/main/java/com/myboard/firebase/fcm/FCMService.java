@@ -9,8 +9,8 @@ import com.myboard.entity.User;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,14 @@ public class FCMService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
-//    @Value("#{${firebase.notifications.defaults}}")
-//    private final Map<String, String> defaults;
+    @Value("${firebase.notifications.defaults.title}")
+    private String defaultTitle;
+
+    @Value("${firebase.notifications.defaults.message}")
+    private String defaultMessage;
+
+    @Value("${firebase.notifications.defaults.token}")
+    private String defaultToken;
 
     private void sendMessage(String token, String title, String contents) {
         // setToken 혹은 setTopic을 이용해 메세지의 타겟을 결정
@@ -64,9 +70,14 @@ public class FCMService {
 
             Optional.ofNullable(targetUserToken).ifPresent(token -> sendMessage(
                     token,
-                    "새로운 댓글이 있습니다",
+                    "새로운 댓글이 작성되었습니다!",
                     targetUsername + "님의" + targetArticleTitle + "게시글에" + commentAuthorName + "님이 댓글을 남겼습니다.")
             );
         }
+    }
+
+    @Async
+    public void testNotification() {
+        sendMessage(defaultToken ,defaultTitle, defaultMessage);
     }
 }

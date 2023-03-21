@@ -35,6 +35,6 @@ firebase:
   scope: https://www.googleapis.com/auth/cloud-platform
   notifications:
     defaults:
-      title: Hello
-      message: SendingTestMessage
+      title: 새로운 댓글이 작성되었습니다!
+      message: oo님의 oo게시글에 ooo님이 님이 댓글을 남겼습니다.
       token: c58FYJjHRuaUL42adIg8Sn:APA91bHGInsolgB4mKiJ8hmYB1CWCTBZzFj3tOWvF2XKA1r4fusm9L1xTni1NH13B4HtPMvCtkp0544mIgr6ukL4svZpQ65FtaIfvkk_GzGpAIe0ICbR3oBW9KnpbMbqAbNU2xfUpb5G
