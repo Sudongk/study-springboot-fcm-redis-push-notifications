@@ -1,10 +1,9 @@
 # **Spring Boot + FCM + Redis - 간단한 푸시 알림 게시판 API 서버**
-<p align="center">
+<p align="left">
   <img width="300" height="500" alt="image" src="https://user-images.githubusercontent.com/82927161/226632175-ece216ca-63d5-4d24-b346-6c1cc173d173.PNG">
   <img width="300" height="500" alt="image" src="https://user-images.githubusercontent.com/82927161/226638303-ec6fecd9-04ae-49b4-9e17-1af9f4872446.PNG">
 </p>
 <p>
-  aaa
 </p>
 
 ## 📝 개요
