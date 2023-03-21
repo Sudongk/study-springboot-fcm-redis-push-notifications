@@ -1,7 +1,7 @@
-# **My Board API**
+# **Spring Boot + FCM + Redis - 간단한 푸시 알림 게시판 API 서버**
 
 ## 📝 개요
-- 자신의 게시글에 댓글이 달렸거나, 게시판에 새로운 게시글이 작성되었을때 Web Push 알림 전송
+- 자신의 게시글에 댓글이 달렸거나, 게시판에 새로운 게시글이 작성되었을때 Push 알림 전송
 - Spring Security, Jwt를 이용한 인증/인가
 - Redis를 이용한 토큰 관리
 
