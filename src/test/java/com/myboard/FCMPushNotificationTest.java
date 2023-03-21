@@ -3,6 +3,8 @@ package com.myboard;
 import com.google.firebase.FirebaseApp;
 import com.myboard.config.firebase.FirebaseInitializer;
 import com.myboard.firebase.fcm.FCMService;
+import com.myboard.firebase.fcm.PushNotificationService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -19,14 +21,14 @@ public class FCMPushNotificationTest {
     private FirebaseInitializer firebaseInitializer;
 
     @Mock
-    private FCMService fcmService;
+    private PushNotificationService pushNotificationService;
 
     @Test
     public void contextLoads() {
-
     }
 
     @Test
+    @DisplayName("firebase init test")
     public void firebaseAppInitializationTest() {
         firebaseInitializer.firebaseInit();
         System.out.println(FirebaseApp.getApps());
@@ -34,9 +36,10 @@ public class FCMPushNotificationTest {
     }
 
     @Test
+    @DisplayName("fcm push notification test")
     public void sendTestMessage() {
         try {
-            fcmService.testNotification();
+            pushNotificationService.testCommentNotification();
         } catch(Exception e) {
             fail();
         }
