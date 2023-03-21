@@ -3,6 +3,8 @@
 <img width="300" height="500" align="left" alt="image" src="https://user-images.githubusercontent.com/82927161/226632175-ece216ca-63d5-4d24-b346-6c1cc173d173.PNG">
 <img width="300" height="500" align="left" alt="image" src="https://user-images.githubusercontent.com/82927161/226638303-ec6fecd9-04ae-49b4-9e17-1af9f4872446.PNG">
 
+---
+
 ## 📝 개요
 - 자신의 게시글에 댓글이 달렸거나, 게시판에 새로운 게시글이 작성되었을때 Push 알림 전송
 - Spring Security, Jwt를 이용한 인증/인가
