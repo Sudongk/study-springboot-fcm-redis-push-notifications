@@ -1,5 +1,9 @@
 # **Spring Boot + FCM + Redis - 간단한 푸시 알림 게시판 API 서버**
 
+<img width="980" alt="image" src="https://user-images.githubusercontent.com/82927161/226632175-ece216ca-63d5-4d24-b346-6c1cc173d173.PNG">
+
+<img width="980" alt="image" src="https://user-images.githubusercontent.com/82927161/226632494-06bb43ef-990e-4a9c-9f98-9635bd520071.PNG">
+
 ## 📝 개요
 - 자신의 게시글에 댓글이 달렸거나, 게시판에 새로운 게시글이 작성되었을때 Push 알림 전송
 - Spring Security, Jwt를 이용한 인증/인가
@@ -21,7 +25,7 @@
 - Querydsl<br>
 - JUnit5<br>
 - Mocktito<br>
-- Firebase<br>
+- Firebase Cloud Messaging<br>
 
 ## 📈 DB 아키텍처
 <img width="980" alt="image" src="https://user-images.githubusercontent.com/82927161/209620685-0053af8a-0356-4227-bc49-96c2f77c191c.PNG">
