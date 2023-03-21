@@ -35,6 +35,10 @@ public class FCMPushNotificationTest {
 
     @Test
     public void sendTestMessage() {
-
+        try {
+            fcmService.testNotification();
+        } catch(Exception e) {
+            fail();
+        }
     }
 }
