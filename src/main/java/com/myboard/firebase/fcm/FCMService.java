@@ -9,10 +9,12 @@ import com.myboard.entity.User;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -24,6 +26,9 @@ public class FCMService {
     private final FCMTokenManager fcmTokenManager;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+
+//    @Value("#{${firebase.notifications.defaults}}")
+//    private final Map<String, String> defaults;
 
     private void sendMessage(String token, String title, String contents) {
         // setToken 혹은 setTopic을 이용해 메세지의 타겟을 결정

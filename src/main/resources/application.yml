@@ -14,11 +14,6 @@ spring:
         jdbc:
           batch_size: 3
 
-  mvc:
-    view:
-      prefix: /WEB-INF/
-      suffix: .html
-
   datasource:
     url: jdbc:mysql://localhost:3306/boardapi_db?characterEncoding=UTF-8&serverTimezone=UTC&rewriteBatchedStatements=true
     username: root
@@ -38,3 +33,8 @@ jwt:
 firebase:
   firebaseConfigPath: /firebase/board-api-e5a2c-firebase-adminsdk-fubgi-e15e1f43ed.json
   scope: https://www.googleapis.com/auth/cloud-platform
+  notifications:
+    defaults:
+      title: Hello
+      message: SendingTestMessage
+      token: c58FYJjHRuaUL42adIg8Sn:APA91bHGInsolgB4mKiJ8hmYB1CWCTBZzFj3tOWvF2XKA1r4fusm9L1xTni1NH13B4HtPMvCtkp0544mIgr6ukL4svZpQ65FtaIfvkk_GzGpAIe0ICbR3oBW9KnpbMbqAbNU2xfUpb5G
