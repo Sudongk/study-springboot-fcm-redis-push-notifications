@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 public class FCMService {
 
     public void sendMessage(String token, String title, String contents) {
+        log.info("FCMService sendMessage");
         // setToken 혹은 setTopic을 이용해 메세지의 타겟을 결정
         Message message = Message.builder()
                 .setToken(token)
