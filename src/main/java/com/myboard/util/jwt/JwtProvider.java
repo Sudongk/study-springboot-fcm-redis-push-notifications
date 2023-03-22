@@ -1,9 +1,10 @@
 package com.myboard.util.jwt;
 
 import com.myboard.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.myboard.jwt.JwtTokenManager;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -50,32 +51,39 @@ public class JwtProvider {
     }
 
     public String extractUserId(String token) {
+        log.info("extractUserId");
         return extractClaim(token, Claims::getId);
     }
 
     public String extractUsername(String token) {
+        log.info("extractUsername");
         return extractClaim(token, Claims::getSubject);
     }
 
     public Date extractExpiration(String token) {
+        log.info("extractExpiration");
         return extractClaim(token, Claims::getExpiration);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
+        log.info("isTokenValid");
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        log.info("extractClaim");
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     private boolean isTokenExpired(String token) {
+        log.info("isTokenExpired");
         return extractExpiration(token).before(new Date());
     }
 
     public String getJwtFromRequest(HttpServletRequest request) {
+        log.info("getJwtFromRequest");
         return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
                 .filter(auth -> auth.startsWith("Bearer "))
                 .map(auth -> auth.replace("Bearer ", ""))
@@ -91,6 +99,15 @@ public class JwtProvider {
 
     // jwt decode
     private Claims extractAllClaims(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (SignatureException | MalformedJwtException e) {
+            throw new BadCredentialsException("자격 증명에 실패하였습니다.");
+        }
+
         return Jwts
                 .parserBuilder()
                 .setSigningKey(key)

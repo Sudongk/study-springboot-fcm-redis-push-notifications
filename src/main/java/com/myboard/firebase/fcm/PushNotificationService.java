@@ -5,12 +5,14 @@ import com.myboard.entity.User;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PushNotificationService {
@@ -32,6 +34,7 @@ public class PushNotificationService {
     // 게시글에 댓글이 달리면 알림 전송
     @Async
     public void commentNotification(Long articleId, Long commentAuthorId) {
+        log.info("PushNotificationService commentNotification");
         Optional<Article> targetArticle = articleRepository.findArticleByIdFetchJoin(articleId);
         Optional<User> commentAuthor = userRepository.findById(commentAuthorId);
 

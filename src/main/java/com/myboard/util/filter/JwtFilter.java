@@ -1,8 +1,8 @@
 package com.myboard.util.filter;
 
+import com.myboard.firebase.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.util.jwt.JwtProvider;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
@@ -38,8 +38,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("JwtFilter start");
-
         String token = jwtProvider.getJwtFromRequest(request);
         String username = jwtProvider.extractUsername(token);
 
@@ -54,12 +52,11 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        log.info("JwtFilter end");
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithAny(request.getRequestURI(), "/", "/api/v1/user/create", "/api/v1/user/login");
+        return StringUtils.startsWithAny(request.getRequestURI(), "/api/v1/user/create", "/api/v1/user/login");
     }
 }
