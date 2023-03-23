@@ -7,7 +7,7 @@ import com.myboard.entity.User;
 import com.myboard.exception.user.SelfConfirmationException;
 import com.myboard.exception.user.UserNameDuplicatedException;
 import com.myboard.exception.user.UserNotFoundException;
-import com.myboard.firebase.fcm.FCMTokenManager;
+import com.myboard.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.repository.user.UserRepository;
 import com.myboard.util.jwt.JwtProvider;
@@ -82,21 +82,27 @@ public class UserServiceImpl implements UserService {
         Long authenticatedUserId = authenticatedUser.getId();
         String authenticatedUsername = authenticatedUser.getUsername();
 
-        // 기존에 존재하는 jwt 삭제
-        jwtTokenManager.removeToken(authenticatedUsername);
-        // Redis에 사용자 이름을 Key로 지정하여 토근값 저장
-        jwtTokenManager.saveToken(authenticatedUsername, jwtToken);
+        deleteAndSaveJwtToken(jwtToken, authenticatedUsername);
+        deleteAndSaveFCMToken(fcmToken, authenticatedUserId);
 
-        // 기존에 존재하는 Fcm 토큰 삭제
-        fcmTokenManager.removeToken(String.valueOf(authenticatedUserId));
-        // Redis에 사용자 아이디를 Key로 Fcm 토큰 저장
-        fcmTokenManager.saveToken(String.valueOf(authenticatedUserId), fcmToken);
 
         return UserResponseDto.builder()
                 .userId(authenticatedUserId)
                 .username(authenticatedUsername)
                 .token(jwtToken)
                 .build();
+    }
+
+    // 기존에 존재하는 jwt 삭제
+    // Redis에 사용자 이름을 Key로 지정하여 토근값 저장
+    private void deleteAndSaveJwtToken(String jwtToken, String authenticatedUsername) {
+        jwtTokenManager.deleteAndSaveToken(authenticatedUsername, jwtToken);
+    }
+
+    // 기존에 존재하는 Fcm 토큰 삭제
+    // Redis에 사용자 아이디를 Key로 Fcm 토큰 저장
+    private void deleteAndSaveFCMToken(String fcmToken, Long authenticatedUserId) {
+        fcmTokenManager.deleteAndSaveFCMToken(String.valueOf(authenticatedUserId), fcmToken);
     }
 
     private User getUserByUsername(String username) {

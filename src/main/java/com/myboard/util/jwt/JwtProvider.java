@@ -46,44 +46,36 @@ public class JwtProvider {
     }
 
     public String generateToken(UserDetails userDetails) {
-        log.info("start generateToken");
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String extractUserId(String token) {
-        log.info("extractUserId");
         return extractClaim(token, Claims::getId);
     }
 
     public String extractUsername(String token) {
-        log.info("extractUsername");
         return extractClaim(token, Claims::getSubject);
     }
 
     public Date extractExpiration(String token) {
-        log.info("extractExpiration");
         return extractClaim(token, Claims::getExpiration);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        log.info("isTokenValid");
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        log.info("extractClaim");
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     private boolean isTokenExpired(String token) {
-        log.info("isTokenExpired");
         return extractExpiration(token).before(new Date());
     }
 
     public String getJwtFromRequest(HttpServletRequest request) {
-        log.info("getJwtFromRequest");
         return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
                 .filter(auth -> auth.startsWith("Bearer "))
                 .map(auth -> auth.replace("Bearer ", ""))

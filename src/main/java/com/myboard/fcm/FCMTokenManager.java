@@ -1,8 +1,9 @@
-package com.myboard.firebase.fcm;
+package com.myboard.fcm;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,17 +28,37 @@ public class FCMTokenManager {
     */
 
     // 레디스에 토근 저장
-    public void saveToken(String userId, String token) {
-        redisTemplate.opsForValue().set(userId, token);
+    private void set(String key, String value) {
+        redisTemplate.opsForValue().set(key, value);
     }
 
     // userId를 이용해 사용자 토근 조회
-    public String getToken(String userId) {
-        return redisTemplate.opsForValue().get(userId);
+    private String get(String key) {
+        return redisTemplate.opsForValue().get(key);
     }
 
     // userId를 이용해 사용자 토근 삭제
-    public void removeToken(String userId) {
-        redisTemplate.delete(userId);
+    private void del(String key) {
+        redisTemplate.delete(key);
+    }
+
+    @Async
+    public void saveToken(String userId, String token) {
+        set(userId, token);
+    }
+
+    public String getToken(String userId) {
+        return get(userId);
+    }
+
+    @Async
+    public void deleteToken(String userId) {
+        del(userId);
+    }
+
+    @Async
+    public void deleteAndSaveFCMToken(String userId, String token) {
+        del(userId);
+        set(userId, token);
     }
 }

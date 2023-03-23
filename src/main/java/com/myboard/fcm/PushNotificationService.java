@@ -1,4 +1,4 @@
-package com.myboard.firebase.fcm;
+package com.myboard.fcm;
 
 import com.myboard.entity.Article;
 import com.myboard.entity.User;

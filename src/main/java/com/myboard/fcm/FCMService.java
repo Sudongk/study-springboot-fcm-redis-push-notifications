@@ -1,4 +1,4 @@
-package com.myboard.firebase.fcm;
+package com.myboard.fcm;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;

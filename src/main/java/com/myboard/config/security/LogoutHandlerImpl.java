@@ -1,6 +1,6 @@
 package com.myboard.config.security;
 
-import com.myboard.firebase.fcm.FCMTokenManager;
+import com.myboard.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.util.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class LogoutHandlerImpl implements LogoutHandler {
         String username = jwtProvider.extractUsername(token);
         String userId = jwtProvider.extractUserId(token);
 
-        jwtTokenManager.removeToken(username);
-        fcmTokenManager.removeToken(String.valueOf(userId));
+        jwtTokenManager.deleteToken(username);
+        fcmTokenManager.deleteToken(String.valueOf(userId));
     }
 }
