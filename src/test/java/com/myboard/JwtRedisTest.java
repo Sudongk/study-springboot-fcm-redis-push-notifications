@@ -21,7 +21,7 @@ public class JwtRedisTest {
 
     @AfterEach
     void clear() {
-        jwtTokenManager.removeToken(USER_NAME);
+        jwtTokenManager.deleteToken(USER_NAME);
     }
 
     @DisplayName("fcm 토큰 CRUD 테스트")
@@ -64,7 +64,7 @@ public class JwtRedisTest {
         void delete() {
             jwtTokenManager.saveToken(USER_NAME, TOKEN);
 
-            jwtTokenManager.removeToken(USER_NAME);
+            jwtTokenManager.deleteToken(USER_NAME);
 
             String token = jwtTokenManager.getToken(USER_NAME);
 

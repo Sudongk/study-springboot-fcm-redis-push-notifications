@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class AlertService {
 
-    private final com.myboard.firebase.fcm.FCMTokenManager FCMTokenManager;
+    private final com.myboard.fcm.FCMTokenManager FCMTokenManager;
 
     // 토근값으로 특정 사용자에게 알림 전송
     public void sendMessage(String token, String title, String contents) {

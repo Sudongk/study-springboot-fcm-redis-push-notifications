@@ -6,7 +6,7 @@ import com.myboard.entity.Article;
 import com.myboard.entity.ArticleComment;
 import com.myboard.entity.User;
 import com.myboard.exception.user.NotAuthorException;
-import com.myboard.firebase.fcm.PushNotificationService;
+import com.myboard.fcm.PushNotificationService;
 import com.myboard.repository.article.ArticleRepository;
 import com.myboard.repository.articleComment.ArticleCommentRepository;
 import com.myboard.repository.user.UserRepository;

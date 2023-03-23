@@ -1,6 +1,5 @@
 package com.myboard.util.filter;
 
-import com.myboard.firebase.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
 import com.myboard.util.jwt.JwtProvider;
 import lombok.extern.slf4j.Slf4j;

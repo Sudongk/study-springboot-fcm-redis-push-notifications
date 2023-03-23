@@ -2,8 +2,7 @@ package com.myboard;
 
 import com.google.firebase.FirebaseApp;
 import com.myboard.config.firebase.FirebaseInitializer;
-import com.myboard.firebase.fcm.FCMService;
-import com.myboard.firebase.fcm.PushNotificationService;
+import com.myboard.fcm.PushNotificationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

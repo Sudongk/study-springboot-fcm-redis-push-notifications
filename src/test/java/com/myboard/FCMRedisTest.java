@@ -1,6 +1,6 @@
 package com.myboard;
 
-import com.myboard.firebase.fcm.FCMTokenManager;
+import com.myboard.fcm.FCMTokenManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,7 +23,7 @@ public class FCMRedisTest {
 
     @AfterEach
     void clear() {
-        fcmTokenManager.removeToken(String.valueOf(USER_ID));
+        fcmTokenManager.deleteToken(String.valueOf(USER_ID));
     }
 
     @DisplayName("fcm 토큰 CRUD 테스트")
@@ -65,7 +65,7 @@ public class FCMRedisTest {
         void delete() {
             fcmTokenManager.saveToken(String.valueOf(USER_ID), TOKEN);
 
-            fcmTokenManager.removeToken(String.valueOf(USER_ID));
+            fcmTokenManager.deleteToken(String.valueOf(USER_ID));
 
             String token = fcmTokenManager.getToken(String.valueOf(USER_ID));
 
