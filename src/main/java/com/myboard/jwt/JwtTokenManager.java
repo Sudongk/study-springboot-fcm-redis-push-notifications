@@ -34,7 +34,6 @@ public class JwtTokenManager {
         return redisTemplate.hasKey(key);
     }
 
-    @Async
     public void saveToken(String username, String token) {
         log.info("JwtTokenManager saveToken");
         set(username, token);
@@ -45,7 +44,6 @@ public class JwtTokenManager {
         return get(username);
     }
 
-    @Async
     public void deleteToken(String username) {
         log.info("JwtTokenManager deleteToken");
         del(username);

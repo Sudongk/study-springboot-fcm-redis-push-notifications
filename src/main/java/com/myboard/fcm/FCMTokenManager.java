@@ -42,7 +42,6 @@ public class FCMTokenManager {
         redisTemplate.delete(key);
     }
 
-    @Async
     public void saveToken(String userId, String token) {
         set(userId, token);
     }
@@ -51,7 +50,6 @@ public class FCMTokenManager {
         return get(userId);
     }
 
-    @Async
     public void deleteToken(String userId) {
         del(userId);
     }

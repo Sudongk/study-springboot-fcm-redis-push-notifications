@@ -1,14 +1,12 @@
 package com.myboard.dto.requestDto.user;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@EqualsAndHashCode(of = "username")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserLoginRequestDto {
 
@@ -22,11 +20,12 @@ public class UserLoginRequestDto {
 
     private String fcmToken;
 
-    @Builder
-    public UserLoginRequestDto(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    // 테스트용
+//    @Builder
+//    public UserLoginRequestDto(String username, String password) {
+//        this.username = username;
+//        this.password = password;
+//    }
 
     @Builder
     public UserLoginRequestDto(String username, String password, String fcmToken) {
