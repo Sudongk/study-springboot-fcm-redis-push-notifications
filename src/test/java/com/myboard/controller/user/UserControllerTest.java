@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -292,6 +293,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("회원탈퇴 성공 - 삭제된 사용사 ID 반환")
     void deleteUserSuccessful() throws Exception {
         // given
