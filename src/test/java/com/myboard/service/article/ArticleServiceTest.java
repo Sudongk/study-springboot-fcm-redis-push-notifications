@@ -159,7 +159,7 @@ public class ArticleServiceTest {
         then(userRepository).should(times(1))
                 .getReferenceById(any());
 
-        then(boardRepository).should(times(0))
+        then(boardRepository).should(never())
                 .getReferenceById(any());
 
         then(articleRepository).should(never())
