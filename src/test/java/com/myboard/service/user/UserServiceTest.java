@@ -3,6 +3,7 @@ package com.myboard.service.user;
 import com.myboard.dto.requestDto.user.UserCreateRequestDto;
 import com.myboard.dto.requestDto.user.UserLoginRequestDto;
 import com.myboard.entity.User;
+import com.myboard.exception.user.SelfConfirmationException;
 import com.myboard.exception.user.UserNameDuplicatedException;
 import com.myboard.fcm.FCMTokenManager;
 import com.myboard.jwt.JwtTokenManager;
@@ -64,9 +65,11 @@ public class UserServiceTest {
     @Mock
     private FCMTokenManager fcmTokenManager;
 
-    private User user, otherUser;
+    private User user;
 
     private static final Long USER_ID = 1L;
+    private static final Long CURRENT_USER_ID = 1L;
+    private static final Long NOT_EQUALS_CURRENT_USER_ID = 2L;
     private static final String USER_NAME = "username";
 
     @BeforeEach
@@ -78,14 +81,6 @@ public class UserServiceTest {
                 .build();
 
         this.user.setId(1L);
-
-        this.otherUser = User.builder()
-                .username("otherUsername")
-                .password("otherPassword")
-                .role(User.Role.USER)
-                .build();
-
-        this.otherUser.setId(2L);
     }
 
     @Test
@@ -176,7 +171,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("로그인 샐피 - 인증실패")
+    @DisplayName("로그인 실패 - 인증실패")
     void authenticateFail() {
         // given
         UserLoginRequestDto request = UserLoginRequestDto.builder()
@@ -189,16 +184,110 @@ public class UserServiceTest {
                         request.getUsername(),
                         request.getPassword()
                 )
-        )).willReturn(null);
+        )).willThrow(BadCredentialsException.class);
 
         // when
         assertThatThrownBy(() -> userService.authenticate(request))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(BadCredentialsException.class);
+
         // then
         then(jwtTokenManager).should(never())
                 .deleteAndSaveToken(any(), any());
 
         then(fcmTokenManager).should(never())
                 .deleteAndSaveFCMToken(any(), any());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 인증실패")
+    void whenUsernameIsNull_authenticate_fail() {
+        // given
+        UserLoginRequestDto request = UserLoginRequestDto.builder()
+                .username(null)
+                .password("password")
+                .build();
+
+        given(authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        )).willThrow(BadCredentialsException.class);
+
+        // when
+        assertThatThrownBy(() -> userService.authenticate(request))
+                .isInstanceOf(BadCredentialsException.class);
+
+        // then
+        then(jwtTokenManager).should(never())
+                .deleteAndSaveToken(any(), any());
+
+        then(fcmTokenManager).should(never())
+                .deleteAndSaveFCMToken(any(), any());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 인증실패")
+    void whenPasswordIsNull_authenticate_fail() {
+        // given
+        UserLoginRequestDto request = UserLoginRequestDto.builder()
+                .username("username")
+                .password(null)
+                .build();
+
+        given(authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        )).willThrow(BadCredentialsException.class);
+
+        // when
+        assertThatThrownBy(() -> userService.authenticate(request))
+                .isInstanceOf(BadCredentialsException.class);
+
+        // then
+        then(jwtTokenManager).should(never())
+                .deleteAndSaveToken(any(), any());
+
+        then(fcmTokenManager).should(never())
+                .deleteAndSaveFCMToken(any(), any());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 성공")
+    void userDelete() {
+        // given
+        given(userRepository.findById(USER_ID))
+                .willReturn(Optional.of(user));
+
+        // when
+        userService.userDelete(USER_ID, CURRENT_USER_ID);
+
+        // then
+        then(userRepository).should(times(1))
+                .findById(USER_ID);
+
+        then(userRepository).should(times(1))
+                .deleteById(USER_ID);
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 실패 - ID 불일치")
+    void userDeleteFailWhenIdNotEquals() {
+        // given
+        given(userRepository.findById(USER_ID))
+                .willReturn(Optional.of(user));
+
+        // when
+        assertThatThrownBy(() -> userService.userDelete(USER_ID, NOT_EQUALS_CURRENT_USER_ID))
+                .isInstanceOf(SelfConfirmationException.class);
+
+        // then
+        then(userRepository).should(times(1))
+                .findById(USER_ID);
+
+        then(userRepository).should(never())
+                .deleteById(USER_ID);
     }
 }

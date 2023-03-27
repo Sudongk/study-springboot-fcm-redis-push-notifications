@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -119,8 +118,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private void isUserIdOwnedByCurrentUser(Long userId, Long currentUserId) {
-        if (!Objects.equals(currentUserId, userId)) {
-            throw new SelfConfirmationException();
-        }
+        userRepository.findById(userId)
+                .stream()
+                .filter(user -> user.getId().equals(currentUserId))
+                .findFirst()
+                .orElseThrow(SelfConfirmationException::new);
+
     }
 }
