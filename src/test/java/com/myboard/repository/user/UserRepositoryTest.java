@@ -1,9 +1,6 @@
 package com.myboard.repository.user;
 
 import com.myboard.config.TestQuerydslConfig;
-import com.myboard.entity.Article;
-import com.myboard.entity.Board;
-import com.myboard.entity.Tag;
 import com.myboard.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
